@@ -1,0 +1,114 @@
+(* SPDX-License-Identifier: PMPL-1.0-or-later *)
+(* KRL — Knot Resolution Language *)
+(* Grammar v0.1.0 (2026-04-05) — DRAFT *)
+(* Pronounced "curl" *)
+
+(* =================================================================== *)
+(*  Top-level program                                                  *)
+(* =================================================================== *)
+
+program           = { statement } ;
+
+statement         = binding
+                  | expression_stmt
+                  | query ;
+
+binding           = "let" , identifier , "=" , expression , ";" ;
+expression_stmt   = expression , ";" ;
+
+(* =================================================================== *)
+(*  Expressions — the four KRL operation families                      *)
+(* =================================================================== *)
+
+expression        = compose_expr ;
+
+compose_expr      = tensor_expr , { ";" , tensor_expr } ;           (* sequential composition *)
+tensor_expr       = unary_expr , { "|" , unary_expr } ;             (* tensor / juxtaposition *)
+
+unary_expr        = prefix_op , unary_expr
+                  | atom ;
+
+prefix_op         = "close"                                         (* RESOLVE: closure *)
+                  | "mirror"                                        (* TRANSFORM: reflection *)
+                  | "simplify"                                      (* TRANSFORM: Reidemeister *)
+                  | "normalise"                                     (* TRANSFORM: canonicalise *)
+                  | "classify" ;                                    (* RESOLVE: equivalence class *)
+
+atom              = generator                                       (* CONSTRUCT *)
+                  | identifier
+                  | "(" , expression , ")" ;
+
+(* =================================================================== *)
+(*  Generators (CONSTRUCT)                                             *)
+(* =================================================================== *)
+
+generator         = crossing_gen
+                  | cup_cap_gen ;
+
+crossing_gen      = "sigma" , integer                               (* positive crossing on strands i, i+1 *)
+                  | "sigma_inv" , integer ;                         (* negative crossing *)
+
+cup_cap_gen       = "cup" , integer                                 (* cup on strands i, i+1 *)
+                  | "cap" , integer ;                               (* cap on strands i, i+1 *)
+
+(* =================================================================== *)
+(*  Queries (RETRIEVE)                                                 *)
+(* =================================================================== *)
+
+query             = "find" , "where" , filter_list , ";" ;
+
+filter_list       = filter , { "and" , filter } ;
+
+filter            = identifier , comparison , value ;
+
+comparison        = "=" | "<" | ">" | "<=" | ">=" | "!=" ;
+
+value             = integer
+                  | string_literal
+                  | identifier ;                                    (* reference to a let-bound expression *)
+
+(* =================================================================== *)
+(*  Equivalence predicates (RESOLVE)                                   *)
+(* =================================================================== *)
+
+(* These are recognised at the expression level as prefix queries:     *)
+(*   equivalent? <expr> <expr>                                         *)
+(*   near <expr>                                                       *)
+(* For v0.1 grammar, model these as "call-shaped" atoms:               *)
+
+(* Not in this grammar yet — placeholder for v0.2:                     *)
+(*   resolve_query ::= "equivalent?" expression expression             *)
+(*                   | "near" expression                               *)
+(* =================================================================== *)
+
+(* =================================================================== *)
+(*  Terminals                                                          *)
+(* =================================================================== *)
+
+identifier        = letter , { letter | digit | "_" } ;
+integer           = digit , { digit } ;
+string_literal    = '"' , { string_char } , '"' ;
+string_char       = ? any character except unescaped quote ? ;
+
+letter            = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J"
+                  | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T"
+                  | "U" | "V" | "W" | "X" | "Y" | "Z"
+                  | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"
+                  | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t"
+                  | "u" | "v" | "w" | "x" | "y" | "z" ;
+
+digit             = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+
+(* =================================================================== *)
+(*  Whitespace and comments                                            *)
+(* =================================================================== *)
+
+(* Whitespace (space, tab, newline) is ignored between tokens. *)
+(* Line comments: "--" to end of line.                          *)
+
+(* =================================================================== *)
+(*  Reserved words                                                     *)
+(* =================================================================== *)
+
+(* let in close mirror simplify normalise classify find where and *)
+(* sigma sigma_inv cup cap                                         *)
