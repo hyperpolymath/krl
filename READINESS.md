@@ -1,52 +1,65 @@
 <!-- SPDX-License-Identifier: PMPL-1.0-or-later -->
 <!-- Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk> -->
 
-# krl Component Readiness Assessment
+# Component Readiness — KRL
 
-**Standard:** [Component Readiness Grades (CRG) v2.2](https://github.com/hyperpolymath/standards/tree/main/component-readiness-grades)
-**Current Grade:** C
+**Standard:** [CRG v2.0 STRICT](https://github.com/hyperpolymath/standards/tree/main/component-readiness-grades)
+**Current Grade:** X
 **Assessed:** 2026-04-05
 **Assessor:** Jonathan D.A. Jewell
 
 ---
 
-## Summary
+## Grade rationale (evidence for X)
 
-| Component           | Grade | Release Stage | Evidence Summary                          |
-|---------------------|-------|---------------|-------------------------------------------|
-| Primary component   | C     | Alpha-stable  | Dogfooded on own project; CI passing      |
+**Untested — default state.** Repository was scaffolded from rsr-template-repo
+on 2026-04-05. No KRL-specific content beyond the template placeholders exists yet.
 
-**Overall:** Grade C — dogfooding confirmed, CI passing, deep annotation in place.
+Template default of "C" was overridden to X per CRG v2 STRICT honesty rule:
+"Grade as-is TODAY, not aspirational — honest D > dishonest B".
 
----
+### What exists
 
-## Grade C Evidence
+- RSR template infrastructure (workflows, SECURITY/CONTRIBUTING/CODE_OF_CONDUCT, `.machine_readable/6a2/` skeleton)
+- 0-AI-MANIFEST.a2ml
+- Template-provided directory structure
 
-- Deployed and dogfooded on the krl project itself
-- CI passing (dogfood-gate, hypatia-scan, static-analysis-gate)
-- TEST-NEEDS.md documents test matrix
-- No home failures
-- Deep code and folder annotation in place per CRG v2 requirements
+### What does not yet exist
 
----
-
-## Promotion Path to Grade B
-
-Grade B requires: **6+ diverse external targets tested, issues fed back**.
-
-Diversity means: different languages, different architectures, different use cases.
-
-To reach B:
-1. Deploy on at least 6 external projects that differ meaningfully from each other
-2. Confirm it works in each (or document failures)
-3. Feed back any issues found (GitHub issues or PRs)
-4. Update this file with the evidence
+- KRL grammar (EBNF/PEG)
+- Parser, AST, typechecker, compiler
+- Surface-syntax examples
+- KRL-specific test suite
+- Language reference documentation
 
 ---
 
-## Concerns and Maintenance Notes
+## Path to E (pre-alpha)
 
-*Document any known limitations, demotion risks, or maintenance concerns here.*
+1. Draft KRL EBNF/PEG grammar with `construct`, `transform`, `resolve`, `retrieve`
+   operation families + compositional syntax (`;`, `|`, `close`, `let`, `find`).
+2. Add at least 1 test — smoke test that parses a "hello tangle" KRL source.
+3. Document known failures / incomplete grammar branches.
+
+## Path to D (alpha)
+
+After E: AST + typechecker + rudimentary compiler to TangleIR (via KRLAdapter.jl)
++ test matrix across parse/typecheck/compile stages.
+
+## Path to C (alpha-stable)
+
+After D: deep annotation, per-directory orientation, reliable dogfooding
+(compile several real KRL programs into stored Skein records).
+
+## Path to B (beta)
+
+After C: 6+ diverse external targets tested, issues fed back.
+
+---
+
+## Review cycle
+
+Reassess on first grammar draft and on each implementation milestone.
 
 ---
 
