@@ -1,0 +1,35 @@
+= KRL - Citation Guide
+:toc:
+
+== BibTeX
+
+[source,bibtex]
+----
+@software{KRL_2026,
+  author = {Jewell, Jonathan D.A.},
+  title = {KRL},
+  year = {2026},
+  url = {https://github.com/hyperpolymath/KRL},
+  license = {PMPL-1.0-or-later}
+}
+----
+
+== Harvard Style
+
+Jewell, J. (2026) _KRL_ [Computer software]. Available at: https://github.com/hyperpolymath/KRL
+
+== OSCOLA
+
+Jonathan D.A. Jewell, 'KRL' (2026) <https://github.com/hyperpolymath/KRL>
+
+== MLA
+
+Jewell, Jonathan D.A. "KRL." 2026, github.com/hyperpolymath/KRL.
+
+== APA 7
+
+Jewell, J. (2026). _KRL_ [Computer software]. GitHub. https://github.com/hyperpolymath/KRL
+
+== See Also
+
+* link:CITATION.cff[CITATION.cff]
