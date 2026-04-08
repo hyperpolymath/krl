@@ -1,175 +1,178 @@
-= RSR Template Repository
-:toc: preamble
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+= KRL — Knot Resolution Language
+Jonathan Jewell (hyperpolymath)
+:toc: left
+:toc-title: Contents
+:doctype: article
 :icons: font
 
-image:https://www.bestpractices.dev/projects/{{OPENSSF_PROJECT_ID}}/badge[OpenSSF Best Practices, link="https://www.bestpractices.dev/projects/{{OPENSSF_PROJECT_ID}}"]
-image:https://api.securityscorecards.dev/projects/github.com/hyperpolymath/krl/badge[OpenSSF Scorecard, link="https://securityscorecards.dev/viewer/?uri=github.com/hyperpolymath/krl"]
+link:docs/krl_map.html[→ KRL architecture map (HTML)]
 
-[TIP]
-====
-**AI-Assisted Install:** Just tell any AI assistant: +
-`Set up KRL from https://github.com/hyperpolymath/krl` +
-The AI reads the manifest, asks you a few questions, and handles everything.
-====
+== What it is
 
-== Overview
+KRL (Knot Resolution Language) is a compositional language for constructing,
+transforming, resolving, and retrieving topological objects: tangles, knots,
+and links.
 
-**The canonical template for RSR (Rhodium Standard Repository) projects.**
+The name reflects the central operation: _resolution_.
+In knot theory, resolution is how crossings are resolved in the skein relation —
+the algebraic heart of invariant computation. KRL extends this to cover
+every interaction with the system: resolving structure, resolving equivalence,
+resolving queries.
 
-This project follows a **Dual-Track** architecture:
-* **Root:** High-level orientation and rich documentation for humans.
-* **Sub-directories:** Machine-readable metadata and technical implementation.
+"Query" would name only one of four operations. "Resolution" names the mathematical
+act that runs through all of them.
 
-== ABI/FFI Standard (Verified Interface Seams)
+== Architecture position
 
-All projects with foreign function interfaces MUST follow this consolidated standard:
+KRL is the surface language of a four-layer stack:
 
-* **ABI (Idris2):** `src/interface/abi/*.idr` (The Specification)
-* **FFI (Zig):** `src/interface/ffi/src/*.zig` (The Implementation)
-* **Generated:** `src/interface/generated/*.h` (The Artifacts)
-
-This unification ensures that the "Truth," the "Bridge," and the "Result" are managed as a single architectural unit.
-
-== AI Gatekeeper Protocol
-
-All projects MUST include a root `0-AI-MANIFEST.a2ml`. This is the mandatory entry point for all AI agents. It prevents duplicate file errors and preserves architectural invariants across sessions.
-
-== Repository Structure
-
-[cols="1,3"]
-|===
-|Directory |Purpose
-
-|`.github/`
-|Forge-specific metadata (CODEOWNERS, SECURITY.md, workflows).
-
-|`.machine_readable/`
-|Canonical project state (6 a2ml files), bot directives, and AI guides.
-
-|`container/`
-|Stapeln container ecosystem (selur-compose, vordr, rokur).
-
-|`docs/`
-|Technical documentation sorted by tracks (Theory, Practice, Architecture).
-
-|`docs/legal/`
-|Consolidated legal exhibits and full license texts.
-
-|`src/interface/`
-|Unified ABI/FFI/Generated interface unit.
-|===
-
-== Container Ecosystem (Stapeln)
-
-This template includes a complete `container/` directory for the **Stapeln Six** tools:
-1. **selur** (Orchestration)
-2. **cerro-torre** (Verified Packaging)
-3. **svalinn** (Edge Gateway)
-4. **vordr** (Monitoring)
-5. **rokur** (Secrets)
-6. **k9-svc** (Deployment Contracts)
-
-== Quick Start
-
-[source,bash]
 ----
-just init              # Interactive bootstrap
-just build             # Unified build
-just test              # Unified test
-just container-build   # Build verified OCI image
+KRL surface syntax       ← this repository (TanglePL compiler module)
+TangleIR                 ← canonical interchange object
+VerisimMorphism          ← abstract categorical view (VerisimCore)
+Skein.jl + QuandleDB     ← persistence and semantic indexing
 ----
 
-== Contractile System
+The TanglePL module (this repo) is responsible for:
 
-This template includes five **contractile files** in `.machine_readable/contractiles/` that make your repository's rules executable:
+* Parsing KRL source text
+* Building and typechecking the AST
+* Compiling AST to `TangleIR`
+* Reconstructing source from IR (lossy but readable)
 
-[cols="1,2,3"]
+It is *not* responsible for:
+
+* Invariant computation (→ JuliaKnot.jl)
+* Persistence (→ Skein.jl)
+* Equivalence reasoning (→ QuandleDB)
+
+== The four KRL operations
+
+[cols="1,2,1,2"]
 |===
-| Tool | File | Purpose
+|Operation |Knot concept |Repo |Example syntax
 
-| `must check`
-| `Mustfile.a2ml`
-| Physical state invariants (files exist, code compiles, no secrets)
+|*Construct* |Tangles, ports, composition, tensor |TanglePL
+|`compose sigma1 sigma1` +
+`tensor a b` +
+`close t`
 
-| `trust verify`
-| `Trustfile.a2ml`
-| Integrity verification (hashes valid, signatures correct, provenance traceable)
+|*Transform* |PD code, Reidemeister moves |JuliaKnot.jl
+|`simplify t` +
+`normalise t` +
+`mirror t`
 
-| `dust status`
-| `Dustfile.a2ml`
-| Cleanup tasks (stale files, build artifacts, expired tokens)
+|*Resolve* |Isotopy, quandle, equivalence class |QuandleDB
+|`equivalent? a b` +
+`classify t` +
+`near t`
 
-| `intend list`
-| `Intentfile.a2ml`
-| Design intent and roadmap tracking
-
-| `k9 eval`
-| `*.k9.ncl`
-| Nickel-based deployment validation
+|*Retrieve* |Jones/Alexander invariants, indexed store |Skein.jl
+|`find where jones = p` +
+`where crossing < 8`
 |===
 
-=== Installation
+== Grammar (sketch)
 
-[source,bash]
 ----
-cargo install contractile
+expr     ::= atom
+           | expr ';' expr          (* sequential composition *)
+           | expr '|' expr          (* tensor product *)
+           | 'close' expr           (* closure / trace *)
+           | 'mirror' expr
+           | 'simplify' expr
+           | 'let' IDENT '=' expr
 
-# Create symlinks for individual commands
-for cmd in must trust dust intend k9; do
-  ln -sf $(which contractile) ~/.local/bin/$cmd
-done
-----
+atom     ::= IDENT                  (* named tangle *)
+           | generator
 
-=== Usage
+generator ::= 'sigma' INT           (* positive crossing *)
+           | 'sigma_inv' INT        (* negative crossing *)
+           | 'cup' INT              (* cup on strands i,i+1 *)
+           | 'cap' INT              (* cap on strands i,i+1 *)
 
-[source,bash]
-----
-# Symlink contractiles to project root (CLI searches ./contractiles/)
-ln -sf .machine_readable/contractiles contractiles
-
-# Run checks
-must check           # Verify physical state (23 checks in typical RSR project)
-trust verify         # Verify integrity and provenance
-dust status          # Show cleanup items
-intend list          # Show design intents and roadmap
-
-# Generate Just recipes from contractile files
-contractile gen-just # Creates contractile.just (already imported by Justfile)
-
-# Then use via Just:
-just must-check
-just trust-verify
+query    ::= 'find' 'where' filter ('and' filter)*
+filter   ::= IDENT '=' value
+           | IDENT '<' INT
+           | IDENT '>' INT
 ----
 
-=== Writing Checks
+== TangleIR — the canonical interchange
 
-Contractile files use A2ML format — simple, line-oriented:
+All KRL expressions compile to `TangleIR`. This is the object that flows
+between all layers of the stack:
 
-[source]
+[source,julia]
 ----
-### check-name
-- description: Human-readable description
-- run: shell command (exit 0 = pass, non-zero = fail)
-- severity: critical | warning | info
+struct Port
+    id::Symbol
+    side::Symbol        # :top | :bottom | :left | :right
+    index::Int
+    orientation::Symbol # :in | :out | :unknown
+end
+
+struct CrossingIR
+    id::Symbol
+    sign::Int           # +1 (positive) | -1 (negative)
+    arcs::NTuple{4,Int} # PD-style: (a, b, c, d) arc indices
+end
+
+struct TangleMetadata
+    name::Union{String,Nothing}
+    source_text::Union{String,Nothing}
+    tags::Vector{String}
+    provenance::Symbol  # :user | :derived | :rewritten | :imported
+    extra::Dict{Symbol,Any}
+end
+
+struct TangleIR
+    id::UUID
+    ports_in::Vector{Port}
+    ports_out::Vector{Port}
+    crossings::Vector{CrossingIR}
+    components::Vector{Vector{Int}}  # arc index groups per component
+    metadata::TangleMetadata
+end
 ----
 
-See link:https://github.com/hyperpolymath/contractiles[contractiles documentation] for the full specification.
+`TangleIR` is the single hardest-designed artifact in the stack.
+Every other interface is a view over it, a service to it, or a transformation of it.
 
-== Wondering How This Works?
+== Usage
 
-If you're curious about the tech behind the claims in this README, see
-link:EXPLAINME.adoc[EXPLAINME.adoc] — feature highlights with code paths
-and honest caveats. Questions welcome via issues or direct contact.
+[source,julia]
+----
+using TanglePL, Skein
 
-== Documentation
+# parse and compile
+ir = compile_tangle("sigma1 ; sigma1 ; sigma1")
 
-* link:EXPLAINME.adoc[Show Me The Receipts] — how headline features work
-* link:CONTRIBUTING.adoc[Contributing Guide]
-* link:GOVERNANCE.adoc[Governance Model]
-* link:docs/attribution/MAINTAINERS.adoc[Maintainers & Citations]
-* link:SECURITY.adoc[Security Policy]
+# store
+db = SkeinDB("knots.db")
+id = store!(db, ir; name="trefoil")
 
-== License
+# query
+candidates = find_equivalence_candidates(db, ir)
 
-SPDX-License-Identifier: PMPL-1.0-or-later
-See link:LICENSE[LICENSE] and link:docs/legal/[docs/legal/] for details.
+# retrieve source
+src = reconstruct_source(ir)   # generates valid KRL; not necessarily original
+----
+
+== Status
+
+* Grammar: defined (sketch above, formal PEG in progress)
+* AST: defined
+* Typechecker: boundary arity checking implemented
+* Compiler (AST → TangleIR): in development
+* Decompiler (IR → source): stub, in progress
+* Skein integration: planned
+
+== Related
+
+* link:../skein-jl/README.adoc[Skein.jl] — persistence and query
+* link:../quandle-db/README.adoc[QuandleDB] — semantic fingerprinting
+* link:../julia-knot/README.adoc[JuliaKnot.jl] — invariant engine
+* link:../nextgen-languages/README.adoc[Next-generation languages]
