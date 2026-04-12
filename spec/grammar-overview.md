@@ -72,16 +72,21 @@ Line comments start with `--` and extend to end of line.
 
 ## Target implementation language for v0.2 parser
 
-**Option A (current lean):** write parser in Tangle (OCaml-embedded). Dogfoods
-Tangle as the host language for KRL, but requires bootstrap work.
+**Decision (2026-04-12): Option B — Julia in KRLAdapter.jl.**
 
-**Option B:** write parser in Julia inside `KRLAdapter.jl`. Fastest path to a
-working parser; loses the host-language dogfooding story.
+Rationale:
+- Grammar is small (3-level precedence, ~12 productions); no parser generator needed
+- KRLAdapter.jl is already the correct integration layer — AST → TangleIR lowering
+  lives naturally alongside the existing adapters
+- No bootstrap risk from Tangle (grade C, still evolving)
+- Fastest path from E → D grade
 
-**Option C:** write parser in OCaml as a sibling to tangle's compiler,
-sharing lexer/parser infrastructure.
+Implementation: `KRLAdapter.jl/src/parser/` (lexer.jl, ast.jl, parser.jl, lower.jl).
+Public API: `parse_krl(src::String) -> KRLProgram`, `lower_krl(prog) -> KRLLoweredProgram`.
 
-Decision deferred until KRL passes D grade validation.
+Option A (Tangle-embedded) remains the aspirational long-term target once Tangle
+reaches grade B and has stable macro/DSL hosting. Option C (sibling OCaml) is
+archived — would duplicate tangle infrastructure without benefit at this scale.
 
 ## See also
 
