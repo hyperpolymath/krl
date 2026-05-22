@@ -1,4 +1,4 @@
--- SPDX-License-Identifier: PMPL-1.0-or-later
+-- SPDX-License-Identifier: MPL-2.0
 -- KRL example: figure-eight knot
 
 let fig8 = close (sigma 1 ; sigma_inv 2 ; sigma 1 ; sigma_inv 2)

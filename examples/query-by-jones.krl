@@ -1,4 +1,4 @@
--- SPDX-License-Identifier: PMPL-1.0-or-later
+-- SPDX-License-Identifier: MPL-2.0
 -- KRL example: RETRIEVE — query by invariant
 
 -- Define a reference knot

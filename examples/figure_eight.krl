@@ -1,4 +1,4 @@
--- SPDX-License-Identifier: PMPL-1.0-or-later
+-- SPDX-License-Identifier: MPL-2.0
 -- KRL example: figure-eight knot (4_1)
 
 -- Alternating crossings on a 2-braid
