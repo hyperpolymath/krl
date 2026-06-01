@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 // Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+// Owner: Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 = KRL — Knot Resolution Language
 Jonathan Jewell (hyperpolymath)
@@ -27,27 +28,40 @@ act that runs through all of them.
 
 == Architecture position
 
-KRL is the surface language of a four-layer stack:
+KRL is the surface language of a four-layer federated stack:
 
 ----
-KRL surface syntax       ← this repository (TanglePL compiler module)
+KRL surface syntax       ← this repository (spec, ABI, FFI scaffolds)
+                            implementations: KRLAdapter.jl,
+                                             quandledb/server/krl/
 TangleIR                 ← canonical interchange object
-VerisimMorphism          ← abstract categorical view (VerisimCore)
+                            defined in KRLAdapter.jl, consumed by
+                            hyperpolymath/tangle
+Tangle core              ← proven type-safe small-step semantics
+                            (hyperpolymath/tangle/proofs/Tangle.lean)
 Skein.jl + QuandleDB     ← persistence and semantic indexing
 ----
 
-The TanglePL module (this repo) is responsible for:
+*This repo* is responsible for:
 
-* Parsing KRL source text
-* Building and typechecking the AST
-* Compiling AST to `TangleIR`
-* Reconstructing source from IR (lossy but readable)
+* The KRL grammar specification (`spec/grammar.ebnf`).
+* Idris2 ABI types (`src/interface/Abi/`).
+* Zig FFI scaffolds (`src/interface/ffi/`).
+* Example programs (`examples/`).
+* The proof narrative (`PROOF-NARRATIVE.md`) and obligations registry.
 
-It is *not* responsible for:
+The actual KRL parser, lowering, and adapter implementations live
+in the companion repos `KRLAdapter.jl` (canonical) and
+`quandledb/server/krl/` (server-side query parser — different role).
+See `PROOF-NARRATIVE.md` for the two-implementation rationale and
+the equivalence obligation `KR-6`.
+
+KRL is *not* responsible for:
 
 * Invariant computation (→ JuliaKnot.jl)
 * Persistence (→ Skein.jl)
 * Equivalence reasoning (→ QuandleDB)
+* Surface-language implementation (→ KRLAdapter.jl)
 
 == The four KRL operations
 

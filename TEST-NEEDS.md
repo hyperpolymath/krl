@@ -1,107 +1,88 @@
-# TEST-NEEDS: rsr-template-repo
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
+# Test Requirements — KRL
 
-## CRG Grade: C — ACHIEVED 2026-04-04
+> Implementation-level proofs and their property-test stand-ins are in
+> [PROOF-NEEDS.md](PROOF-NEEDS.md). This file is the **test-coverage
+> register**: every test that exists, every test that should exist,
+> and the CRG grade against `standards/component-readiness-grades`.
 
-## Current State (Updated 2026-04-04)
+## CRG Grade
 
-| Category | Count | Details |
-|----------|-------|---------|
-| **Source modules** | 6 | 3 Idris2 ABI (Foreign, Layout, Types), 2 Zig FFI (build, main), 1 Zig integration test template |
-| **Unit tests** | 0 | None in main source (inline tests in main.zig) |
-| **Integration tests** | 1 | test/integration_test.zig (documented template, 1 placeholder test) |
-| **E2E tests** | 1 | tests/e2e/template_instantiation_test.sh (full instantiation + validation) |
-| **Workflow tests** | 1 | tests/workflows/validate_workflows_test.sh (21 workflows validated) |
-| **Validation tests** | 1 | scripts/validate-template.sh (8-phase comprehensive validation) |
-| **Benchmarks** | 5 | benches/template_bench.sh (validation, Zig build, tests, workflows, instantiation) |
-| **Fuzz tests** | 0 | README.adoc scaffold with harness instructions |
+**Current grade:** D
+**Last assessed:** 2026-06-01 (this audit). Promoted E → D 2026-04-12
+(see [READINESS.md](READINESS.md)).
 
-## Completed Work (CRG C - Testing & Benchmarking)
+D grade criterion: "Works on some inputs, test matrix present."
+The test matrix at the spec/grammar/example level is present in this
+repo. The actual KRL parser/lower test suite (5577 tests) lives in
+the canonical implementation `KRLAdapter.jl`.
 
-### Template Validation Script ✅
-- [x] `scripts/validate-template.sh` — 8-phase validation
-  - Phase 1: Core repository structure (root files, directories)
-  - Phase 2: Machine-readable metadata (.machine_readable/)
-  - Phase 3: GitHub Actions workflows (17 required + all present)
-  - Phase 4: Idris2 ABI and Zig FFI source files
-  - Phase 5: Placeholder token replacement (skipped in template)
-  - Phase 6: SPDX license headers (100% coverage, 6/6 files)
-  - Phase 7: Build system verification (zig build + idris2 syntax check)
-  - Phase 8: Documentation requirements (TOPOLOGY, ABI-FFI-README, etc)
-- Status: **PASSING** (0 errors, 3 warnings about template placeholders)
+## Test inventory
 
-### E2E Template Instantiation Test ✅
-- [x] `tests/e2e/template_instantiation_test.sh` — full workflow
-  - Clones template to temp directory
-  - Replaces all {{PLACEHOLDER}} tokens with test values
-  - Validates resulting structure with scripts/validate-template.sh
-  - Verifies Zig build works after instantiation
-  - Checks no remaining placeholders
-  - Cleans up temp directory
-- Status: **READY TO TEST** (can be verified by CI)
+### In this repo
 
-### Workflow Validation Test ✅
-- [x] `tests/workflows/validate_workflows_test.sh`
-  - Validates all 21 workflows exist and have proper structure
-  - Checks SPDX headers, 'name' field
-  - Verifies all 15 required workflows present
-- Status: **PASSING** (0 errors, 15/15 required workflows found)
+| Path | Kind | What it covers | Status |
+|------|------|----------------|--------|
+| `tests/smoke/grammar_smoke.sh` | Shell smoke | 16 lexical assertions on grammar tokens | PASSING |
+| `tests/aspect_tests.sh` | Shell | Aspect tagging (`src/aspects/`) | PASSING |
+| `tests/e2e.sh` | Shell entry-point | Wraps the e2e suite | PASSING |
+| `tests/e2e/template_instantiation_test.sh` | Shell E2E | Template instantiation end-to-end | PASSING (template artefact; flag for removal below) |
+| `tests/workflows/validate_workflows_test.sh` | Shell | All `.github/workflows/` files have SPDX header + `name:` field | PASSING |
+| `src/interface/ffi/test/integration_test.zig` | Zig | Placeholder FFI integration test | PASSING (`placeholder_test_implementation_required`) |
+| `benches/template_bench.sh` | Shell | 5 micro-benchmarks (validation, build, tests, workflows, instantiation) | PASSING |
 
-### Zig FFI Tests ✅
-- [x] `src/interface/ffi/test/integration_test.zig` — template with examples
-  - Converted from krl placeholders to "template" namespace
-  - Added comprehensive comments for how to instantiate
-  - Tests grouped by category (lifecycle, operations, strings, errors, version, memory safety, threading)
-  - Compiles and passes placeholder test
-- Status: **PASSING** (1 test: placeholder_test_implementation_required passes)
+### Out-of-repo (companion suites under proof for this repo's claims)
 
-### Benchmarks ✅
-- [x] `benches/template_bench.sh` — 5 benchmark suites
-  - Validation script: ~5.8s average (3 runs)
-  - Zig build: ~19ms (clean build)
-  - Zig tests: ~20ms
-  - Workflow validation: ~117ms
-  - Template instantiation: ~427ms
-- Formats: human, json, csv
-- Status: **PASSING** (all benchmarks execute)
+| Path | Kind | What it covers |
+|------|------|----------------|
+| `KRLAdapter.jl/test/parser_test.jl` | Julia property | Lexer / parser / lower / 4 example programs (~57 dedicated parser tests) |
+| `KRLAdapter.jl/test/*.jl` | Julia | Full KRLAdapter suite (~5577 tests) |
+| `quandledb/server/krl/test/*.jl` | Julia | Server-side parser equivalence (lexer / parser / sql / seam — 1713 LoC) |
 
-### Build System ✅
-- [x] `src/interface/ffi/build.zig` — updated for Zig 0.15.2
-  - Simplified to test-only configuration
-  - Supports both unit tests and integration tests
-  - Works with `zig build` without errors
-- Status: **PASSING** (builds successfully)
+## Gaps (what we owe)
 
-## Test Results Summary
+Cross-referenced to [PROOF-NEEDS.md](PROOF-NEEDS.md) and [PROOF-NARRATIVE.md](PROOF-NARRATIVE.md).
 
-```
-Validation Script:    PASS (0 errors, 3 warnings)
-Workflow Validation:  PASS (21/21 workflows valid)
-Integration Tests:    PASS (1/1 placeholder test)
-E2E Instantiation:    READY (needs CI confirmation)
-Benchmarks:           PASS (5/5 benchmark suites)
-Build System:         PASS (zig build succeeds)
-```
+| # | Test gap | Tied to | Effort |
+|---|----------|---------|--------|
+| TG-K1 | Round-trip property test: `parse(pretty(e)) = e` for every example | KR-4 | 4h |
+| TG-K2 | Differential test: `KRLAdapter.jl::parse_krl(s) ≡ quandledb/server/krl::parse_any(s)` on a generated corpus | KR-6 | 4h |
+| TG-K3 | Property test: `sigma 0`, `cup 0`, `cap 0` rejected; `sigma N` for `N ≥ 1` accepted | KR-7 | 1h |
+| TG-K4 | Property test: lowering exhausts every `KRLExpr` variant (no `KRLLowerError` from un-matched case) | KR-1 / [[A-KR-1.1]] | 2h |
+| TG-K5 | Property test: port-arity preservation on every `compose` and `tensor` in `examples/` | KR-2 | 4h |
+| TG-K6 | Cross-platform fingerprint test (Linux/macOS/WSL) — coordinate with QuandleDB QD-4 | KR-8 / quandledb QD-4 | 1d |
+| TG-K7 | Fuzz harness: random byte-strings → `parse_krl` → assert "either valid AST or `KRLParseError`, never a panic" | KR-1 | 1d |
+| TG-K8 | Bench: parse-and-lower throughput vs program size (target: linear) | (perf) | 4h |
+| TG-K9 | Bench: round-trip cost (`parse ∘ pretty`) on the example corpus | (perf) | 4h |
 
-## CRG C Compliance
+## Removed (the template-content cleanup)
 
-- **Coverage**: 6/6 test categories (unit, integration, E2E, workflow, validation, benchmarks)
-- **Documentation**: All test files have SPDX headers + inline documentation
-- **Author Attribution**: Jonathan D.A. Jewell <6759885+hyperpolymath@users.noreply.github.com>
-- **License**: MPL-2.0 on all new files
-- **Automation**: All scripts executable + working
+The previous `TEST-NEEDS.md` was rsr-template-repo boilerplate
+referring to "rsr-template-repo" throughout. Its claimed
+**CRG Grade: C — ACHIEVED 2026-04-04** referred to the template
+itself, not to KRL. That content has been removed; KRL's actual grade
+is D, per [READINESS.md](READINESS.md).
 
-## FLAGGED ISSUES - ALL RESOLVED
+The template-specific test items (template instantiation, workflow
+validation count, build-system zig 0.15.2 update, etc.) remain
+inventoried above only because their files still exist; they should
+be evaluated for removal when KRL gains repo-specific equivalents.
 
-- ~~**Template repo used by ALL new repos has 0 validation tests**~~ → FIXED: 4 test suites + validation script
-- ~~**fuzz/placeholder.txt**~~ → FIXED: replaced with README.adoc containing real harness instructions
-- ~~**No E2E tests for template instantiation**~~ → FIXED: full E2E test suite
-- ~~**Zig FFI integration tests are placeholders**~~ → FIXED: converted to documented template format
+## How to add a new test
 
-## Next Steps (Future Sessions)
+1. Add a row to **Test inventory** with path, kind, what-it-covers, status.
+2. If it discharges a proof obligation, reference the `KR-N` id and
+   note in [PROOF-NARRATIVE.md](PROOF-NARRATIVE.md) under the
+   relevant obligation's "How to discharge" line.
+3. If new assumptions emerge, register them in [ASSUMPTIONS.md](ASSUMPTIONS.md).
 
-- [ ] Integrate test scripts into CI/CD workflows
-- [ ] Generate test coverage reports
-- [ ] Add more specialized benchmarks (memory, threading stress)
-- [ ] Document test instantiation patterns for new repos
+## CRG path forward
 
-## Priority: P0 (COMPLETE) ✅
+- **D → C:** Implement the typechecker (KR-2), discharge KR-1 and KR-4
+  as property tests, demonstrate parsing 20+ programs from the knot table.
+- **C → B:** 6+ diverse external targets writing KRL programs.
+- **B → A:** All P1 obligations in PROOF-NEEDS proven (not just
+  property-tested).
