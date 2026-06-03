@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MPL-2.0
-// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
-
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = KRL — Knot Resolution Language
 Jonathan Jewell (hyperpolymath)
 :toc: left
 :toc-title: Contents
 :doctype: article
 :icons: font
+
+image:https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity[OpenSSF Best Practices,link="https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/krl"]
 
 link:docs/krl_map.html[→ KRL architecture map (HTML)]
 
