@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # KRL — OpenLearn Course
 
 An OpenLearn-style free course introducing the KRL stack: what it is, why it
