@@ -118,6 +118,26 @@ for file in "${EXAMPLE_FILES[@]}"; do
         fi
     done
 
+    # 4b. KR-7: generator indices must be POSITIVE (N >= 1).
+    # The canonical parser in KRLAdapter.jl raises a "zero index" error
+    # for `sigma 0`, `sigma_inv 0`, etc., and negative indices are
+    # outside the lexer's positive-Int recognition. The smoke test
+    # asserts that no committed example contains such a pattern.
+    #
+    # See PROOF-NARRATIVE.md KR-7 and ASSUMPTIONS.md A-KR-2.1.
+    # NB: grep returns 1 when nothing matches; under `set -e` we
+    # capture into a variable with `|| true` to avoid exiting.
+    zero_violations=$(grep -oE '\b(sigma|sigma_inv|cup|cap)\b[[:space:]]+0\b' <<< "$stripped" || true)
+    if [[ -n "$zero_violations" ]]; then
+        report_fail "$name: generator with zero index violates KR-7 ($zero_violations)"
+    else
+        report_pass "$name: no generator-with-zero-index (KR-7 ok)"
+    fi
+    neg_violations=$(grep -oE '\b(sigma|sigma_inv|cup|cap)\b[[:space:]]+-[0-9]+' <<< "$stripped" || true)
+    if [[ -n "$neg_violations" ]]; then
+        report_fail "$name: generator with negative index violates KR-7 ($neg_violations)"
+    fi
+
     # 5. File must mention at least one operation family
     found_family=""
     grep -qE '\bsigma\b|\bsigma_inv\b|\bcup\b|\bcap\b' <<< "$stripped" && found_family="${found_family} CONSTRUCT"
