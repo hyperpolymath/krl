@@ -1,11 +1,9 @@
 # SPDX-License-Identifier: MPL-2.0
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
-# STATE.a2ml — Project state checkpoint (META-TEMPLATE)
+# STATE.a2ml — Project state checkpoint
 #
 # This is the STATE file for krl.
-# When consumed by a new project, replace {{PLACEHOLDER}} tokens
-# and customize sections below for the target project.
 
 [metadata]
 project = "krl"
@@ -58,7 +56,5 @@ part-of = ["RSR Framework", "stapeln ecosystem"]
 depends-on = ["stapeln", "selur-compose", "cerro-torre", "svalinn", "vordr", "k9-svc"]
 
 # ---------------------------------------------------------------------------
-# NOTE FOR CONSUMERS: When using this template to create a new repo, reset
-# the fields above to your project's values and replace all {{PLACEHOLDER}}
-# tokens. The milestones above describe the TEMPLATE's evolution, not yours.
+# NOTE: The milestones above describe the krl repository's evolution.
 # ---------------------------------------------------------------------------

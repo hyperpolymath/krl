@@ -4,5 +4,5 @@
   (version "1.0.0")
   (name "krl")
   (type "library")
-  (purpose "{{REPO_DESCRIPTION}}")
+  (purpose "Knot Resolution Language — a compositional language for constructing, transforming, resolving, and retrieving topological objects: tangles, knots, and links")
   (related-projects))

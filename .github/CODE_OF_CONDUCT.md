@@ -4,26 +4,6 @@ Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 -->
 # Code of Conduct
 
-<!-- 
-============================================================================
-TEMPLATE INSTRUCTIONS (delete this block before publishing)
-============================================================================
-Replace all {{PLACEHOLDER}} values:
-  KRL     - Your project name
-  hyperpolymath            - GitHub/GitLab username or org
-  krl             - Repository name
-  jonathan.jewell@open.ac.uk    - Email for conduct reports
-  Code of Conduct Committee     - Name of conduct team/committee
-  48 hours    - Initial response SLA (e.g., 48 hours)
-  2026     - Current year
-
-Review and customise:
-- Adjust enforcement ladder for your community size
-- Add/remove examples based on your context
-- Ensure contact methods work for your team
-============================================================================
--->
-
 ## Our Pledge
 
 We as members, contributors, and leaders pledge to make participation in KRL a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, colour, religion, or sexual identity and orientation.
