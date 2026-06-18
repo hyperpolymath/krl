@@ -15,9 +15,12 @@ link:docs/krl_map.html[→ KRL architecture map (HTML)]
 
 == What it is
 
-KRL (Knot Resolution Language) is a compositional language for constructing,
-transforming, resolving, and retrieving topological objects: tangles, knots,
-and links.
+KRL (Knot Resolution Language) is QuandleDB's canonical resolution DSL: a
+database-facing language whose domain is knot/tangle identity, equivalence,
+transformation, and disambiguation. It is the user- and author-facing language for
+constructing, transforming, resolving, and retrieving knot/tangle presentations,
+invariants, fingerprints, equivalence classes, witnesses, and disambiguation
+results.
 
 The name reflects the central operation: _resolution_.
 In knot theory, resolution is how crossings are resolved in the skein relation —
@@ -25,24 +28,48 @@ the algebraic heart of invariant computation. KRL extends this to cover
 every interaction with the system: resolving structure, resolving equivalence,
 resolving queries.
 
-"Query" would name only one of four operations. "Resolution" names the mathematical
-act that runs through all of them.
+KRL is database-facing but not _merely_ a query language. "Query" would name only
+one of four operations; "resolution" names the mathematical act that runs through
+all of them. Two framings to avoid: "a database language" alone wrongly suggests
+SQL-for-knots, and "a surface DSL over Tangle" alone makes QuandleDB incidental and
+KRL too compiler-ish. KRL is precisely QuandleDB's resolution DSL — it lowers through
+TangleIR into Tangle-level computation, with QuandleDB and Skein.jl as its
+persistence and computation backends.
 
 == Architecture position
 
-KRL is the surface language of a four-layer federated stack:
+KRL is the surface language of a federated resolution stack. Each layer answers a
+distinct question:
 
-----
-KRL surface syntax       ← this repository (spec, ABI, FFI scaffolds)
-                            implementations: KRLAdapter.jl,
-                                             quandledb/server/krl/
-TangleIR                 ← canonical interchange object
-                            defined in KRLAdapter.jl, consumed by
-                            hyperpolymath/tangle
-Tangle core              ← proven type-safe small-step semantics
-                            (hyperpolymath/tangle/proofs/Tangle.lean)
-Skein.jl + QuandleDB     ← persistence and semantic indexing
-----
+[cols="1,4"]
+|===
+| Layer | Role — and the question it answers
+
+| *KRL* +
+(this repository)
+| User-/author-facing resolution DSL. _"What question or claim are we making about
+knot-structured identity?"_ Spec, ABI, FFI scaffolds; implementations in
+`KRLAdapter.jl` (canonical) and `quandledb/server/krl/`.
+
+| *TangleIR*
+| Lowered intermediate representation. _"What normalized computational object
+represents that resolution task?"_ Defined in `KRLAdapter.jl`, consumed by
+`hyperpolymath/tangle`.
+
+| *Tangle*
+| Full computational / programming substrate. _"What executable knot-theoretic
+program or transformation system carries this out?"_ Proven type-safe small-step
+semantics (`hyperpolymath/tangle/proofs/Tangle.lean`).
+
+| *QuandleDB*
+| Persistence + invariant/equivalence database. _"Where presentations, invariants,
+fingerprints, equivalence classes, witnesses, and results live."_
+(`hyperpolymath/quandledb`)
+
+| *Skein.jl*
+| Computational / backend library. _"One engine that computes, transforms,
+normalizes, or evaluates the objects."_ (`hyperpolymath/Skein.jl`)
+|===
 
 *This repo* is responsible for:
 
