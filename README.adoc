@@ -94,9 +94,18 @@ KRL is *not* responsible for:
 
 == The four KRL operations
 
+KRL has exactly four operations. The four-verb shape is deliberate: it stops
+"querying" from becoming the whole identity of the language.
+
+[horizontal]
+*construct*:: create or declare presentations, structures, claims, datasets
+*transform*:: rewrite, normalize, compose, concatenate, permute, mutate
+*resolve*:: decide / disambiguate / evaluate equivalence or identity questions
+*retrieve*:: inspect, fetch, project, explain, or return stored or computed results
+
 [cols="1,2,1,2"]
 |===
-|Operation |Knot concept |Repo |Example syntax
+|Operation |Knot concept |Primary site |Example syntax
 
 |*Construct* |Tangles, ports, composition, tensor |TanglePL
 |`compose sigma1 sigma1` +
@@ -113,10 +122,25 @@ KRL is *not* responsible for:
 `classify t` +
 `near t`
 
-|*Retrieve* |Jones/Alexander invariants, indexed store |Skein.jl
+|*Retrieve* |Invariants, witnesses, stored resolutions |Skein.jl + QuandleDB
 |`find where jones = p` +
 `where crossing < 8`
 |===
+
+[NOTE]
+====
+*Retrieve is not arbitrary database querying.* It recovers
+*resolution-relevant artefacts*: presentations, invariants, witnesses,
+equivalence classes, prior resolutions, explanations, and provenance.
+
+Generic data access — arbitrary filters, dashboards, reporting, analytics,
+exploratory search, index tuning — is an *engine-layer* affordance (Skein.jl
+predicates over SQLite; QuandleDB's filtered endpoints), deliberately *not*
+elevated to a KRL operation or a rival query language. A separate query
+language is *deferred*, not absent; see
+`docs/decisions/0002-query-language-deferred.adoc` for the rationale and
+trigger conditions.
+====
 
 == Grammar (sketch)
 

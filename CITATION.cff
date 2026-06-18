@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+cff-version: 1.2.0
+message: "If you use KRL (Knot Resolution Language), please cite it as below."
+title: "KRL — Knot Resolution Language"
+abstract: >-
+  KRL is QuandleDB's canonical resolution DSL: a database-facing language whose
+  domain is knot/tangle identity, equivalence, transformation, and disambiguation.
+  It is the user- and author-facing language for constructing, transforming,
+  resolving, and retrieving knot/tangle presentations, invariants, witnesses,
+  equivalence classes, and disambiguation results, lowering through TangleIR into
+  Tangle-level computation over the QuandleDB and Skein.jl backends.
+type: software
+authors:
+  - family-names: Jewell
+    given-names: "Jonathan D. A."
+    email: j.d.a.jewell@open.ac.uk
+    alias: hyperpolymath
+license: MPL-2.0
+repository-code: "https://github.com/hyperpolymath/krl"
+url: "https://github.com/hyperpolymath/krl"
+keywords:
+  - knot theory
+  - resolution language
+  - knot identity
+  - equivalence
+  - disambiguation
+  - domain-specific language
