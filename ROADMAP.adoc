@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= YOUR Template Repo Roadmap
+= KRL Roadmap
 
 == Current Status
 
@@ -20,4 +20,11 @@ Initial development phase.
 
 == Future Directions
 
-_To be determined based on community feedback._
+* *Query language: deferred.* Querying stays a mode of KRL (the `retrieve`
+  operation), not a sibling language. A separate query language is deferred until
+  sustained non-resolution operations accrue — dashboards, arbitrary filters,
+  administrative analytics, bulk reporting, exploratory search, index tuning. If
+  built, it will be a KRL-family projection/reporting dialect compiling to TangleIR,
+  not a rival paradigm. See `docs/decisions/0002-query-language-deferred.adoc`.
+
+_Otherwise to be determined based on community feedback._
