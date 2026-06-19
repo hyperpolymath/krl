@@ -1,0 +1,92 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= krl — Normative Scope (Must / Intend / Wish)
+:toc: preamble
+:revdate: 2026-06-19
+
+[abstract]
+Per-repo normative-scope record for krl (the Knot Resolution Language surface),
+plus a clearly-marked *crossover* block for the QuandleDB side of the shared
+KRL-stack table. Estate rule (2026-06-19): every repo carries its own scoped
+table; crossover content is duplicated and marked until resolved, then wired
+into the other relevant repos. `◇` marks proposals not yet canonical.
+
+== Levels
+
+* *MUST* — required to be what it is (RFC 2119 normative).
+* *INTEND* — committed direction.
+* *WISH* — aspirational.
+
+== krl (own)
+
+[cols="1,5", options="header"]
+|===
+| Level | krl
+
+| *MUST*
+| Be the resolution DSL — *Construct / Transform / Resolve / Retrieve*; lower to
+  TangleIR; rest on Tangle type-safety (extend, never redefine); run against the
+  QuandleDB+Skein substrate (no 1:1 op↔component); *not merely a query
+  language*; estate governance — the `MUST` contractile gate (LICENSE, README,
+  SPDX headers, no banned files) stays green; SPDX headers on all files.
+
+| *INTEND*
+| *Finish the RSR-template instantiation* (the live debt per `AFFIRMATION.adoc`):
+  rename the `Justfile` off `rsr-template-repo`, replace the `{project-name}`
+  token in EXPLAINME and the ~8 remaining `{{PLACEHOLDER}}` files, add
+  `.machine_readable/anchors/ANCHOR.a2ml` + `src/interface/abi`, assign the
+  Groove port, digest-pin the Containerfile. Discharge the `PROOF-NEEDS`
+  obligations (Typing / Invariant / Algorithm / ABI — currently 0/7). Retrieve
+  recovers resolution-relevant artefacts, *not* arbitrary query; keep
+  polynomial/colouring computation in the engine, invoked not language-level ◇.
+
+| *WISH*
+| A language *family*: KRL (resolution) + a quandle-algebra language
+  (object-level set/relations) + a narrative-projection language (Lithoglyph) ◇;
+  KRL dialects; generic query surface if/when the query language is un-deferred
+  (ADR 0002); Verisim federation participation.
+|===
+
+== Crossover — QuandleDB / stack (DUPLICATED; resolve, then wire)
+
+[NOTE]
+====
+*Crossover content — duplicated and marked per the 2026-06-19 estate rule.* The
+QuandleDB column below is *native to quandledb*; it is reproduced here because
+krl and QuandleDB share the equivalence-integrity spine. *Once the open items
+resolve* — VerisimCore placement; the language-family split; the query-language
+decision — update the canonical copy in quandledb and re-sync this duplicate.
+====
+
+[cols="1,3,3", options="header"]
+|===
+| Level | QuandleDB (crossover) | ⊕ Both — shared requirement
+
+| *MUST*
+| Durable store: presentations, invariants, fingerprints, equivalence classes,
+  witnesses; extract quandle from TangleIR; read-only server (writes via Skein)
+| Rest on TangleIR / Tangle type-safety; *equivalence-integrity = the `a = a`
+  idem core*; honest KRL-stack grounding (no op↔component category error)
+
+| *INTEND*
+| Canonical persistence + equivalence face; host the server-side KRL parser
+  (`server/krl/`)
+| Serve resolution-relevant artefacts + witnesses + provenance (KRL names them →
+  QuandleDB supplies); feed Verisim's identity / consonance layer
+
+| *WISH*
+| "maths analogue of a graph database" ◇; re-ground the withdrawn schema v5
+| Verisim federation node — map↔territory anchoring; generic query access
+  (deferred — ADR 0002)
+|===
+
+== Spine + cross-repo wiring
+
+The ⊕ MUST cell is load-bearing: *equivalence-integrity*. The `a = a` problem is
+the single thing krl and QuandleDB are unconditionally bound to, from opposite
+ends — QuandleDB *computes and stores* it; krl *resolves with* it.
+
+Sibling repos' key concerns (keep in sync as crossover resolves): *tangle* —
+TangleIR + type-safety semantics; *quandledb* — equivalence / identity face;
+*Skein.jl* — computational engine; *echo-types* — structured-loss theory + the
+identity-fabric framing (Conway·Fichte / Bruner / Ricoeur). See `../../AFFIRMATION.adoc`.

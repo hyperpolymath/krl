@@ -1,0 +1,212 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= AFFIRMATION — krl, as of 2026-06-19
+:toc: macro
+:toclevels: 2
+
+_the No-Bullshit file: what we affirm was true and checkable at this moment_
+
+[NOTE]
+====
+*Genre.* An *affirmation* is a solemn declaration of the truth of a statement,
+made by someone who _declines to swear an oath_. That is exactly what this is:
+our truth-as-best-believed at a stamped instant — binding on our honesty, not a
+claim of infallibility. It is not the README and not the EXPLAINME:
+
+[cols="1,3,2",options="header"]
+|===
+| File | Answers | Tense
+| `README.adoc` | _Where is this going, and why?_ — KRL's purpose and steering | future / aspirational
+| `EXPLAINME.adoc` | _How is it built, and what's the evidence?_ | descriptive / mechanism
+| *`AFFIRMATION.adoc`* (this file) | _What can we honestly affirm was *true and checkable* at a stamped moment?_ | a frozen instant, falsifiable
+|===
+
+Every repo in the estate carries one (`AFFIRMATION.adoc`), per the 2026-06-19
+estate rule. It is deliberately small, dated, and signed, so a reader can hold
+us to exactly what we affirmed, when we affirmed it.
+====
+
+toc::[]
+
+== What this is, and how it is designed to work
+
+*What it is.* A short, dated, jointly-signed snapshot of what we can _honestly
+and verifiably_ claim about the krl repo at one exact commit. Nothing here is
+marketing (that is the README). This file is the receipt.
+
+*How it is designed to work.*
+
+. *Ground truth, not memory.* Every gate result below was produced by _running
+  the gate this session_. *Material caveat (read it):* `just` is *not installed*
+  in this session, so the gate **recipe bodies were executed directly as bash**
+  rather than via `just`. The logic run is the recipe logic; the orchestration
+  was not. A full `just`-driven run in the maintainer's environment is the
+  authoritative form.
+. *A frozen anchor.* The file names the exact commit SHA, branch, and toolchain
+  (see <<Verifiable anchor>>). Move the SHA and this file becomes a draft until
+  re-run.
+. *A real signature.* Authoritatively, this is landed by the maintainer's
+  *signed git commit*. The AI engineering party *cannot* GPG-sign and does not
+  claim to; the signature line is the owner's to complete.
+
+*We are fallible.* This file is our best honest belief, not a proof of its own
+correctness. Treat it as a falsifiable claim.
+
+== The epistemic contract (read this before you trust _or_ attack)
+
+This document records our *best joint belief* at the timestamp below. It is
+*not a guarantee of correctness.*
+
+*No intentional overclaim.* That is the only guarantee. Where a gate passed we
+say "PASS"; where it failed we say "FAIL" and why; where the repo is
+unconfigured RSR-template residue we say so plainly; where a check was *not run*
+this session (absent toolchain) we say "not run", not "passed".
+
+*Standing invitation to refute.* Read this at the stamped commit, reproduce the
+checks in <<reproduce,Reproduce it yourself>>, then tell us where the
+discrepancy is against the artefact as it stood at this moment. An attack that
+skips reproduction is attacking a strawman of a different date.
+
+== Verifiable anchor
+
+[cols="1,3"]
+|===
+| *Repo*        | `hyperpolymath/krl` — KRL (Knot Resolution Language), the resolution-DSL surface of the KRL stack
+| *Branch*      | `claude/practical-newton-9eFe2` (feature branch; this affirmation is *not* anchored to `main`)
+| *Commit (HEAD)* | `d8b9768d294d4339bc4fca3d2e7b787e3ad610bd`
+| *Permalink*   | https://github.com/hyperpolymath/krl/tree/d8b9768d294d4339bc4fca3d2e7b787e3ad610bd
+| *Verified*    | 2026-06-19 (checks run this session; precise UTC second not captured — date, not claimed instant)
+| *Working-tree delta* | Clean (`git status --porcelain` empty) at verification, except this untracked `AFFIRMATION.adoc`.
+| *Toolchain (what was present)* | `git 2.43.0`, `Agda 2.6.3`. *Absent this session:* `just`, `deno`, `julia`, `lean`, `idris2`.
+| *Run method*  | Gate *recipe bodies executed directly as bash* (no `just`). See the caveat above.
+| *HEAD commit signature* | *Not signed by the AI party.* Authoritative signature is the maintainer's signed commit that lands this file.
+|===
+
+[IMPORTANT]
+If you are reading this at a _later_ commit, the claims may have drifted. Re-run
+<<reproduce>> and write a fresh affirmation; do not trust a stale one.
+
+== Companion documents and repo metadata (cross-check)
+
+* *`README.adoc`* — *present and customised*: title `= KRL — Knot Resolution
+  Language`. Consistent with the tree (real grammar + `src/` content below).
+* *`EXPLAINME.adoc`* — *present but carries template residue*: its first heading
+  is `= {project-name} — Show Me The Receipts` — the `{project-name}` token is
+  *unreplaced*. Honest drift: EXPLAINME is not yet instantiated.
+* *`0-AI-MANIFEST.a2ml`* — present.
+* *GitHub repo description / topics* — *not fetched this session* (no `gh`
+  available). Not cross-checked; do not read this file as validating the public
+  description.
+
+== The honest state (one breath)
+
+krl is a *language-in-design on RSR-template scaffolding*. There is *real* KRL
+content — a 114-line `spec/grammar.ebnf`, a grammar overview, and a populated
+`src/` (`core`, `definitions`, `errors`, `bridges`, `contracts`, `aspects`,
+`interface`) — but the repo is *half-instantiated from `rsr-template-repo`*: the
+`Justfile` still carries the template's name and `# TODO` stub recipes, several
+files still hold `{{PLACEHOLDER}}` tokens, and there are no discharged proofs.
+The `MUST` and licence/secrets `TRUST` gates pass; `verify-template` and
+`validate-rsr` fail loudly. Exactly the honest state, fenced below.
+
+== What is solid (and how we checked)
+
+* *`MUST` gate — PASS (all four).* Run as bash from `contractile.just`:
+  `must-license-present` (LICENSE present), `must-readme-present` (`README.adoc`
+  present), `must-no-banned-files` (no Dockerfile/Makefile),
+  `must-spdx-headers` (0 unheadered source files scanned).
+* *`TRUST` — licence + secrets PASS.* `trust-license-content` (LICENSE carries
+  an SPDX/MPL identifier) and `trust-no-secrets-committed` (no `.env` /
+  `credentials.json` / `.env.local`).
+* *Real language artefacts exist.* `spec/grammar.ebnf` (114 lines) +
+  `spec/grammar-overview.md`; `src/` holds `core / definitions / errors /
+  bridges / contracts / aspects / interface`. This is genuine KRL design, not
+  template filler — KRL is the Construct/Transform/Resolve/Retrieve resolution
+  DSL of the stack.
+
+== Known-incomplete but honestly fenced (loud failures, never silent)
+
+* *`verify-template` — FAIL.* The `Justfile` still references
+  `rsr-template-repo`; ~8 files still contain `{{PLACEHOLDER}}` tokens; the
+  Groove manifest still has `(port 0)`; and `EXPLAINME.adoc` still has the
+  `{project-name}` token. krl is a partly-uninstantiated RSR template — visible
+  debt.
+* *`trust-container-images-pinned` — FAIL.* `Containerfile` base images are not
+  digest-pinned (`@sha256:`). Supply-chain hygiene gap.
+* *`validate-rsr` — FAIL.* Required paths missing at this commit:
+  `.machine_readable/anchors/ANCHOR.a2ml` and `src/interface/abi`.
+
+== Outstanding / weak / refuted (no spin)
+
+* *No discharged proofs.* `PROOF-STATUS.md` (updated 2026-06-01) reports *0 done*
+  across all categories: Typing 0/2, Invariant 0/3 (1 partial), Algorithm 0/1
+  (1 partial), ABI 0/1 (decision pending). krl makes *no* proof-soundness claim.
+* *Build/test/lint are stubs.* The `Justfile` `build` / `test` / `lint` / `e2e`
+  recipes are `# TODO`-marked `echo` placeholders — they do not exercise krl.
+* *Not run this session (absent toolchain):* `validate-state`, the full OpenSSF
+  `verify`, and anything needing `just` / `deno` / a prover. Stated, not faked.
+* *Two `.machine_readable` layouts coexist* (root `*.a2ml` *and* `6a2/`) — worth
+  reconciling, not a correctness fault.
+
+== Reproduce it yourself [[reproduce]]
+
+From the repo root, at the commit above (no `just` needed — run the recipe
+bodies as bash):
+
+[source,bash]
+----
+git rev-parse HEAD          # expect d8b9768d294d4339bc4fca3d2e7b787e3ad610bd
+git status --porcelain      # expect empty before adding this file
+
+# MUST (expect PASS):
+test -f LICENSE; test -f README.adoc; test ! -f Dockerfile -a ! -f Makefile
+
+# TRUST (licence+secrets PASS; container pinning FAIL):
+grep -q 'SPDX\|MPL' LICENSE
+grep -q '@sha256:' Containerfile          # expect NO match -> FAIL
+
+# verify-template (expect FAIL):
+grep -q 'rsr-template-repo' Justfile      # expect match -> FAIL
+grep -rl '{{'{{'}}[A-Z_]*{{'}}'}}' --include='*.adoc' --include='*.a2ml' . | grep -v PLACEHOLDERS
+
+# validate-rsr (expect FAIL): these should be MISSING
+ls .machine_readable/anchors/ANCHOR.a2ml src/interface/abi
+----
+
+== One-line characterisation (quote this)
+
+"KRL is the Knot Resolution Language surface of the KRL stack — a genuine
+grammar-and-`src` design (`spec/grammar.ebnf`, `src/{core,definitions,errors,
+bridges}`) inside a half-instantiated RSR template: the `MUST` and
+licence/secrets `TRUST` gates pass, but `verify-template` and `validate-rsr`
+fail loudly (Justfile still `rsr-template-repo`, ~8 placeholder files, EXPLAINME
+`{project-name}`, missing `ANCHOR.a2ml` + `src/interface/abi`, Containerfile
+unpinned), and `PROOF-STATUS` reports 0/7 obligations discharged. A
+language-in-design on template scaffolding, not a finished artefact — and the
+gates were run as raw bash because `just` is absent in this session. No
+intentional overclaim."
+
+== Key concern + cross-repo wiring
+
+krl's *key concern* is the *resolution DSL surface* (Construct / Transform /
+Resolve / Retrieve), lowering to TangleIR. Per the 2026-06-19 estate rule, each
+repo carries its own AFFIRMATION + scoped Must/Intend/Wish table, cross-
+referencing the others and kept in sync as crossover resolves. krl's scoped
+table lives at `docs/identity-fabric/musts-intends-wishes.adoc`. Sibling
+concerns: *tangle* (TangleIR + type-safety semantics), *quandledb* (equivalence
+/ identity face), *Skein.jl* (computational engine), *echo-types* (structured-
+loss theory). Resolve crossover items, then wire the update into those repos.
+
+== Joint attestation
+
+To the best of our joint belief at the timestamp above, every claim in this file
+is true and was checked as described — with no intentional overclaim, and with
+the open gaps stated rather than hidden.
+
+* *Engineering party (AI):* ran the gate bodies recorded here as bash on
+  2026-06-19 and stands behind this wording as a faithful report of those runs,
+  including the explicit `just`-absent caveat.
+* *Owner / maintainer:* Jonathan D.A. Jewell — signs by committing this file
+  with `-S`; the signed git commit over this content, at the SHA above, is the
+  authoritative form of this affirmation.
+* *Signed-off-date:* (fill on signing)
