@@ -53,9 +53,11 @@ into the other relevant repos. `◇` marks proposals not yet canonical.
 ====
 *Crossover content — duplicated and marked per the 2026-06-19 estate rule.* The
 QuandleDB column below is *native to quandledb*; it is reproduced here because
-krl and QuandleDB share the equivalence-integrity spine. *Once the open items
-resolve* — VerisimCore placement; the language-family split; the query-language
-decision — update the canonical copy in quandledb and re-sync this duplicate.
+krl and QuandleDB share the equivalence-integrity spine. *VerisimCore placement
+is now resolved* (maintainer-confirmed 2026-06-19: krl → tangle/TangleIR →
+VerisimCore (categorical abstraction) → Skein/QuandleDB). Once the remaining open
+items resolve — the language-family split; the query-language decision — update
+the canonical copy in quandledb and re-sync this duplicate.
 ====
 
 [cols="1,3,3", options="header"]
