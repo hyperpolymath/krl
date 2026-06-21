@@ -91,4 +91,5 @@ ends — QuandleDB *computes and stores* it; krl *resolves with* it.
 Sibling repos' key concerns (keep in sync as crossover resolves): *tangle* —
 TangleIR + type-safety semantics; *quandledb* — equivalence / identity face;
 *Skein.jl* — computational engine; *echo-types* — structured-loss theory + the
-identity-fabric framing (Conway·Fichte / Bruner / Ricoeur). See `../../AFFIRMATION.adoc`.
+identity-fabric framing (Conway·Fichte / Bruner / Ricoeur); *KnotTheory.jl* — knot-theory mathematics library (Skein weak-dep);
+*nextgen-typing* — type-theory coordination monorepo. See `../../AFFIRMATION.adoc`.
