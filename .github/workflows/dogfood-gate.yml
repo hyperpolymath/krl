@@ -39,7 +39,11 @@ jobs:
 
       - name: Validate A2ML manifests
         if: steps.detect.outputs.count > 0
-        uses: hyperpolymath/a2ml-validate-action@6bff6ec134fc977e86d25166a5c522ddea5c1e78 # main
+        # Pin was 6bff6ec (#26, s-expression identity). That predates #41,
+        # which taught the validator the colon/brace-block identity form
+        # (`id: "..."`), so docs/governance/TSDM.a2ml failed against the old
+        # pin despite being valid. Bumped to current main.
+        uses: hyperpolymath/a2ml-validate-action@5468b7ff0f5129a74d25af5f2468df11a706dc70 # main
         with:
           path: '.'
           strict: 'false'

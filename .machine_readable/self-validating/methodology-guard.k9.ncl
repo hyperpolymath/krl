@@ -1,3 +1,4 @@
+K9!
 # SPDX-License-Identifier: MPL-2.0
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
@@ -11,6 +12,18 @@ let methodology_guard = {
   name = "methodology-guard",
   version = "1.0.0",
   description = "Validates that agent work respects declared methodology constraints",
+
+  # Component pedigree (K9 self-description).
+  pedigree = {
+    name = "methodology-guard",
+    version = "1.0.0",
+    schema_version = "1.0.0",
+    component_type = "config-validator",
+    author = "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>",
+    description = "Validates that agent work respects declared methodology constraints",
+    leash = "kennel",
+    k9_spec_version = "1.0.0",
+  },
 
   checks = {
     divergent_invariant_language = {
