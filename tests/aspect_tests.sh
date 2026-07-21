@@ -54,7 +54,8 @@ while IFS= read -r -d '' f; do
         warn "Missing SPDX header: $f"
         MISSING_SPDX=$((MISSING_SPDX + 1))
     fi
-done < <(find src/ -type f \( -name "*.rs" -o -name "*.zig" -o -name "*.res" -o -name "*.ex" -o -name "*.exs" -o -name "*.gleam" -o -name "*.idr" -o -name "*.sh" \) -print0 2>/dev/null)
+done < <(find src/ \( -name ".zig-cache" -o -name "zig-out" -o -name "build" \) -prune -o \
+    -type f \( -name "*.rs" -o -name "*.zig" -o -name "*.res" -o -name "*.ex" -o -name "*.exs" -o -name "*.gleam" -o -name "*.idr" -o -name "*.sh" \) -print0 2>/dev/null)
 
 if [ "$MISSING_SPDX" -eq 0 ]; then
     pass "All source files have SPDX headers"
@@ -67,42 +68,67 @@ fi
 # ═══════════════════════════════════════════════════════════════════════
 bold "Aspect 2: Dangerous patterns"
 
-# Idris2 dangerous patterns
-DANGEROUS_IDRIS=$(grep -rn 'believe_me\|assert_total\|really_believe_me' src/abi/ 2>/dev/null | grep -v "^Binary" | grep -v "test" || true)
-if [ -n "$DANGEROUS_IDRIS" ]; then
-    fail "Dangerous Idris2 patterns found:"
-    echo "$DANGEROUS_IDRIS" | head -5
-else
-    pass "No dangerous Idris2 patterns (believe_me, assert_total)"
-fi
+# Source files only. Prose files (.adoc/.md) legitimately *name* the banned
+# constructs in order to ban them; scanning them yields false positives.
+SOURCE_FILES=()
+while IFS= read -r -d '' f; do
+    SOURCE_FILES+=("$f")
+done < <(find src/ verification/ \( -name ".zig-cache" -o -name "zig-out" -o -name "build" \) -prune -o \
+    -type f \( -name "*.idr" -o -name "*.zig" -o -name "*.lean" -o -name "*.v" \
+       -o -name "*.hs" -o -name "*.rs" -o -name "*.ml" \) -print0 2>/dev/null)
 
-# Coq/Lean dangerous patterns
-DANGEROUS_PROOF=$(grep -rn '\bAdmitted\b\|\bsorry\b\|\bunsafeCoerce\b\|\bObj\.magic\b' src/ verification/ 2>/dev/null | grep -v "test" | grep -v "comment" || true)
-if [ -n "$DANGEROUS_PROOF" ]; then
-    fail "Dangerous proof patterns found:"
-    echo "$DANGEROUS_PROOF" | head -5
+# Comment lines legitimately *name* the banned constructs in order to ban them.
+# Strip `file:line:` then any leading comment marker before judging a hit.
+strip_comments() { grep -vE ':[0-9]+:[[:space:]]*(--|//|#|\(\*|\*)' || true; }
+
+if [ "${#SOURCE_FILES[@]}" -eq 0 ]; then
+    fail "No source files found under src/ or verification/ — aspect scan would be vacuous"
 else
-    pass "No dangerous proof patterns (Admitted, sorry, unsafeCoerce)"
+    # Idris2 dangerous patterns
+    DANGEROUS_IDRIS=$({ grep -n 'believe_me\|assert_total\|really_believe_me' "${SOURCE_FILES[@]}" 2>/dev/null || true; } | strip_comments)
+    if [ -n "$DANGEROUS_IDRIS" ]; then
+        fail "Dangerous Idris2 patterns found:"
+        echo "$DANGEROUS_IDRIS" | head -5
+    else
+        pass "No dangerous Idris2 patterns (believe_me, assert_total) in ${#SOURCE_FILES[@]} source files"
+    fi
+
+    # Coq/Lean/Haskell dangerous patterns
+    DANGEROUS_PROOF=$({ grep -n '\bAdmitted\b\|\bsorry\b\|\bunsafeCoerce\b\|\bObj\.magic\b' "${SOURCE_FILES[@]}" 2>/dev/null || true; } | strip_comments)
+    if [ -n "$DANGEROUS_PROOF" ]; then
+        fail "Dangerous proof patterns found:"
+        echo "$DANGEROUS_PROOF" | head -5
+    else
+        pass "No dangerous proof patterns (Admitted, sorry, unsafeCoerce) in ${#SOURCE_FILES[@]} source files"
+    fi
 fi
 
 # ═══════════════════════════════════════════════════════════════════════
 # Aspect 3: ABI/FFI Contract (if applicable)
 # ═══════════════════════════════════════════════════════════════════════
-# Uncomment if your project has Idris2 ABI + Zig FFI:
+bold "Aspect 3: ABI/FFI contract"
 
-# bold "Aspect 3: ABI/FFI contract"
-# if [ -d "src/abi" ] && [ -d "ffi/zig" ]; then
-#     # Check that every exported function in Idris2 ABI has a Zig FFI implementation
-#     ABI_EXPORTS=$(grep -h 'export' src/abi/*.idr 2>/dev/null | wc -l)
-#     FFI_EXPORTS=$(grep -h 'pub export fn' ffi/zig/src/*.zig 2>/dev/null | wc -l)
-#     if [ "$ABI_EXPORTS" -gt 0 ] && [ "$FFI_EXPORTS" -gt 0 ]; then
-#         pass "ABI ($ABI_EXPORTS exports) and FFI ($FFI_EXPORTS exports) both present"
-#     else
-#         fail "ABI/FFI mismatch: $ABI_EXPORTS ABI exports, $FFI_EXPORTS FFI exports"
-#     fi
-# else
-#     pass "ABI/FFI not applicable (no src/abi or ffi/zig)"
-# fi
+ABI_DIR="src/interface/Abi"
+FFI_DIR="src/interface/ffi"
+
+if [ -d "$ABI_DIR" ] && [ -d "$FFI_DIR" ]; then
+    # Idris2 declares the ABI surface; Zig implements it over the C ABI.
+    # Zig uses bare `export fn` (not `pub export fn`) for C-ABI exports.
+    ABI_FOREIGN=$(grep -h '%foreign' "$ABI_DIR"/*.idr 2>/dev/null | wc -l)
+    FFI_EXPORTS=$(grep -h '^export fn' "$FFI_DIR"/src/*.zig 2>/dev/null | wc -l)
+
+    if [ "${ABI_FOREIGN:-0}" -eq 0 ]; then
+        fail "No %foreign declarations found in $ABI_DIR — ABI surface is empty"
+    elif [ "$FFI_EXPORTS" -eq 0 ]; then
+        fail "No 'export fn' found in $FFI_DIR/src — FFI implementation is empty"
+    elif [ "$FFI_EXPORTS" -lt "$ABI_FOREIGN" ]; then
+        fail "ABI/FFI mismatch: $ABI_FOREIGN %foreign declarations but only $FFI_EXPORTS Zig exports"
+    else
+        pass "ABI ($ABI_FOREIGN %foreign decls) covered by FFI ($FFI_EXPORTS exports)"
+    fi
+else
+    fail "Expected ABI at $ABI_DIR and FFI at $FFI_DIR — one or both missing"
+fi
 
 # ═══════════════════════════════════════════════════════════════════════
 # Aspect 4: Error Handling (no raw panic in production code)

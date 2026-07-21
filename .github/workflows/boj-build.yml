@@ -16,7 +16,11 @@ jobs:
   trigger-boj:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: ${{ vars.BOJ_SERVER_URL != '' || secrets.BOJ_SERVER_URL != '' }}
+    # No job-level `if:` gate here. The `secrets` context is not available in
+    # job-level conditions (only `github`, `inputs`, `needs`, `vars`), and a
+    # `vars`-only test would silently skip the secret-configured case. The step
+    # below reads both and exits 0 when neither is set, which is the documented
+    # no-op behaviour.
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

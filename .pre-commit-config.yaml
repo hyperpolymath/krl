@@ -9,8 +9,14 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
+      # LICENSES/ holds verbatim licence texts that must match the canonical
+      # SPDX wording byte for byte (CC-BY-SA-4.0 and MPL-2.0 both contain
+      # significant trailing whitespace). Reformatting them silently
+      # invalidates REUSE conformance, so they are excluded here.
       - id: trailing-whitespace
+        exclude: '^LICENSES/'
       - id: end-of-file-fixer
+        exclude: '^LICENSES/'
       - id: check-yaml
       - id: check-json
       - id: check-toml
@@ -47,5 +53,7 @@ repos:
         exclude: '(\.git|node_modules|target|_build|deps|\.deno|external_corpora|\.lake)/'
 
   # --- Secret detection ---
+  - repo: https://github.com/gitleaks/gitleaks
     rev: v8.24.3
     hooks:
+      - id: gitleaks
