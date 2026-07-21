@@ -5,15 +5,16 @@ on:
   push:
     branches: [main, master]
   workflow_dispatch:
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+# Permissions are declared per job rather than at workflow level, so the build
+# job never holds the pages/id-token write scopes that only the deploy job
+# needs.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 jobs:
   build:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 15
     container:
@@ -43,6 +44,10 @@ jobs:
         with:
           path: '_site'
   deploy:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
