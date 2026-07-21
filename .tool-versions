@@ -1,10 +1,10 @@
-# Uncomment and customize for your project
-# rust nightly
-# just 1.40.0
-# nickel 1.10.0
-# gleam 1.8.0
-# elixir 1.18.0
-# erlang 27.2
-# zig 0.14.0
-# idris2 0.7.0
+# Toolchains this repository actually uses.
+#   zig     — the C-ABI FFI shim under src/interface/ffi (verified against 0.16.0)
+#   idris2  — the ABI declarations under src/interface/Abi
+#
+# NOTE: `rust nightly` is retained only because .github/workflows/rust-ci.yml
+# still calls the shared Rust reusable. There is no Cargo.toml in this repo,
+# so that workflow currently gates nothing — see issue #38.
+zig 0.16.0
+idris2 0.7.0
 rust nightly

@@ -69,62 +69,66 @@ echo ""
 # ─── Preflight ───────────────────────────────────────────────────────
 bold "Preflight checks"
 
-# TODO: Check that your binary/server is built
-# Example:
-# BINARY="$PROJECT_DIR/target/release/my-tool"
-# if [ ! -f "$BINARY" ]; then
-#     red "Binary not found at $BINARY — run 'just build' first"
-#     exit 1
-# fi
-# green "  Binary found: $BINARY"
+FFI_DIR="$PROJECT_DIR/src/interface/ffi"
+ABI_DIR="$PROJECT_DIR/src/interface/Abi"
 
-# TODO: Check dependencies
-# command -v curl >/dev/null 2>&1 || { red "curl not found"; exit 1; }
-# command -v jq >/dev/null 2>&1   || { red "jq not found"; exit 1; }
+command -v zig >/dev/null 2>&1 || { red "zig not found — required to build the KRL FFI"; exit 1; }
+green "  zig found: $(zig version)"
+
+[ -f "$FFI_DIR/build.zig" ] || { red "missing $FFI_DIR/build.zig"; exit 1; }
+green "  FFI build definition present"
 
 echo ""
 
-# ═══════════════════════════════════════════════════════════════════════
-# TODO: Add your E2E test sections below. Examples:
-# ═══════════════════════════════════════════════════════════════════════
+# ─── Section 1: FFI builds and its unit tests pass ───────────────────
+bold "Section 1: Zig FFI pipeline"
 
-# ─── Example: CLI tool E2E ───────────────────────────────────────────
-# bold "Section 1: CLI happy path"
-# OUTPUT=$($BINARY --help 2>&1)
-# check "help flag works" "Usage:" "$OUTPUT"
-#
-# OUTPUT=$($BINARY process input.txt --output /tmp/e2e-output.json 2>&1)
-# check "process command succeeds" "complete" "$OUTPUT"
-#
-# OUTPUT=$(cat /tmp/e2e-output.json)
-# check "output is valid JSON" '"status"' "$OUTPUT"
+if (cd "$FFI_DIR" && zig build test) >/dev/null 2>&1; then
+    green "  PASS: zig build test"
+    PASS=$((PASS + 1))
+else
+    red "  FAIL: zig build test"
+    FAIL=$((FAIL + 1))
+fi
 
-# ─── Example: Server E2E ────────────────────────────────────────────
-# bold "Section 2: Server lifecycle"
-# $BINARY serve --port 9999 &
-# SERVER_PID=$!
-# trap "kill $SERVER_PID 2>/dev/null" EXIT
-# sleep 2
-#
-# STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:9999/health)
-# check_status "health endpoint" "200" "$STATUS"
-#
-# BODY=$(curl -s http://localhost:9999/health)
-# check "health response" '"status":"ok"' "$BODY"
-#
-# kill $SERVER_PID 2>/dev/null
+if (cd "$FFI_DIR" && zig build) >/dev/null 2>&1 && [ -f "$FFI_DIR/zig-out/lib/libkrl.a" ]; then
+    green "  PASS: static library libkrl.a produced"
+    PASS=$((PASS + 1))
+else
+    red "  FAIL: static library libkrl.a not produced"
+    FAIL=$((FAIL + 1))
+fi
 
-# ─── Example: VeriSimDB integration ─────────────────────────────────
-# bold "Section 3: VeriSimDB persistence"
-# VERISIM_URL="${VERISIM_API_URL:-http://localhost:9090}"
-# if ! curl -sf "$VERISIM_URL/health" >/dev/null 2>&1; then
-#     skip_test "VeriSimDB integration" "gateway not available"
-# else
-#     STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$VERISIM_URL/api/v1/hexads" \
-#         -H "Content-Type: application/json" \
-#         -d '{"tool":"KRL","modality":"document","content":"e2e test"}')
-#     check_status "hexad POST" "201" "$STATUS"
-# fi
+echo ""
+
+# ─── Section 2: ABI surface is covered by the FFI ────────────────────
+bold "Section 2: ABI/FFI correspondence"
+
+ABI_FOREIGN=$(grep -h '%foreign' "$ABI_DIR"/*.idr 2>/dev/null | wc -l)
+FFI_EXPORTS=$(grep -h '^export fn' "$FFI_DIR"/src/*.zig 2>/dev/null | wc -l)
+
+if [ "$ABI_FOREIGN" -gt 0 ] && [ "$FFI_EXPORTS" -ge "$ABI_FOREIGN" ]; then
+    green "  PASS: $ABI_FOREIGN %foreign declarations covered by $FFI_EXPORTS Zig exports"
+    PASS=$((PASS + 1))
+else
+    red "  FAIL: ABI/FFI mismatch ($ABI_FOREIGN %foreign vs $FFI_EXPORTS exports)"
+    FAIL=$((FAIL + 1))
+fi
+
+echo ""
+
+# ─── Section 3: grammar smoke suite ──────────────────────────────────
+bold "Section 3: KRL grammar smoke suite"
+
+if bash "$PROJECT_DIR/tests/smoke/grammar_smoke.sh" >/dev/null 2>&1; then
+    green "  PASS: grammar smoke suite"
+    PASS=$((PASS + 1))
+else
+    red "  FAIL: grammar smoke suite"
+    FAIL=$((FAIL + 1))
+fi
+
+echo ""
 
 # ═══════════════════════════════════════════════════════════════════════
 # Summary
