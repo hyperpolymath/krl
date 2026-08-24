@@ -1,0 +1,42 @@
+== Bibliography — KRL OpenLearn Course
+
+Key references for the KRL stack.
+
+=== Knot theory
+
+* Kauffman, L. H. — _On Knots_ (foundational)
+* Manturov, V. O. — _Knot Theory_
+* Lickorish, W. B. R. — _An Introduction to Knot Theory_
+
+=== Quandles
+
+* Joyce, D. — "`A classifying invariant of knots, the knot quandle`"
+(1982)
+* Carter, J. S. — _A Survey of Quandle Ideas_
+
+=== Skein relations
+
+* Jones, V. F. R. — the Jones polynomial papers
+* HOMFLY — Freyd, Yetter, Hoste, Lickorish, Millett, Ocneanu
+
+=== Computational knot theory
+
+* KnotInfo (knotinfo.math.indiana.edu)
+* SnapPy
+
+=== Category theory for knot theory
+
+* Baez, J. and Dolan, J. — "`Higher-dimensional algebra and topological
+quantum field theory`"
+
+=== Tangle algebras and compositional diagrams
+
+* Turaev, V. — _Quantum Invariants of Knots and 3-Manifolds_
+
+=== (To be added) Verisim octadic framework
+
+* User’s own notes — not yet written
+
+=== (To be added) Katagoria, TypeLL, tropical types
+
+* User’s own notes — not yet written
