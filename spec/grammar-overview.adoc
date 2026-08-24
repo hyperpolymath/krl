@@ -1,0 +1,112 @@
+== KRL Grammar Overview — v0.1.0
+
+*Status:* DRAFT. Grammar drafted 2026-04-05. No parser yet; this
+document plus `+grammar.ebnf+` are the only artefacts.
+
+KRL (pronounced "`curl`") is the Knot Resolution Language — a
+compositional DSL for constructing, transforming, resolving, and
+retrieving topological objects (tangles, knots, links).
+
+=== The four operation families
+
+KRL’s syntax is designed around four verbs that together span every
+interaction with the system:
+
+[width="100%",cols="34%,33%,33%",options="header",]
+|===
+|Family |Operations |Grammar production
+|*CONSTRUCT* |build tangles from generators |`+generator+`,
+`+compose_expr+`, `+tensor_expr+`
+
+|*TRANSFORM* |Reidemeister moves, mirror, simplify, normalise
+|`+prefix_op+`
+
+|*RESOLVE* |closure, equivalence, classification |`+"close"+`,
+`+"classify"+`
+
+|*RETRIEVE* |query by invariant |`+query+`, `+filter+`
+|===
+
+=== Minimal example
+
+[source,krl]
+----
+-- Construct the trefoil as three positive crossings in sequence
+let trefoil = close (sigma 1 ; sigma 1 ; sigma 1) ;
+
+-- Transform by mirror
+let mirror_trefoil = mirror trefoil ;
+
+-- Retrieve by invariant
+find where jones = trefoil and crossing < 8 ;
+----
+
+=== Operator precedence
+
+From weakest to strongest binding:
+
+[arabic]
+. `+;+` — sequential composition (left-associative)
+. `+|+` — tensor product (left-associative)
+. prefix operators (`+close+`, `+mirror+`, `+simplify+`, `+normalise+`,
+`+classify+`)
+. atoms: generators, identifiers, parenthesised expressions
+
+So `+mirror sigma 1 ; sigma 2+` parses as
+`+(mirror (sigma 1)) ; (sigma 2)+`.
+
+=== Reserved words
+
+....
+let  close  mirror  simplify  normalise  classify
+find  where  and
+sigma  sigma_inv  cup  cap
+....
+
+=== Comments
+
+Line comments start with `+--+` and extend to end of line.
+
+=== Known gaps (documented failures — honest for grade E)
+
+[arabic]
+. *No parser.* The grammar is written, not implemented. Path to D is
+"`grammar → AST → typechecker → compiler to TangleIR (via
+KRLAdapter.jl)`".
+. *Equivalence predicates (`+equivalent?+`, `+near+`) not yet in
+grammar.* Placeholder comment in EBNF; will be added in v0.2.
+. *No polymorphic generators.* Only `+sigma N+`, `+sigma_inv N+`,
+`+cup N+`, `+cap N+` are defined. No way yet to parameterise by strand
+count.
+. *No type annotations.* Type safety is by port-arity checking at
+compile time; not surface syntax. Will interact with TypeLL integration
+later.
+. *No import mechanism.* Multi-file programs not yet supported.
+. *No error-location reporting.* No parser means no error messages.
+
+=== Target implementation language for v0.2 parser
+
+*Decision (2026-04-12): Option B — Julia in KRLAdapter.jl.*
+
+Rationale: - Grammar is small (3-level precedence, ~12 productions); no
+parser generator needed - KRLAdapter.jl is already the correct
+integration layer — AST → TangleIR lowering lives naturally alongside
+the existing adapters - No bootstrap risk from Tangle (grade C, still
+evolving) - Fastest path from E → D grade
+
+Implementation: `+KRLAdapter.jl/src/parser/+` (lexer.jl, ast.jl,
+parser.jl, lower.jl). Public API:
+`+parse_krl(src::String) -> KRLProgram+`,
+`+lower_krl(prog) -> KRLLoweredProgram+`.
+
+Option A (Tangle-embedded) remains the aspirational long-term target
+once Tangle reaches grade B and has stable macro/DSL hosting. Option C
+(sibling OCaml) is archived — would duplicate tangle infrastructure
+without benefit at this scale.
+
+=== See also
+
+* `+grammar.ebnf+` — the formal grammar
+* `+../examples/+` — example KRL programs
+* `+../tests/smoke/+` — grammar smoke tests
+* `+../EXPLAINME.adoc+` — honest scope of the krl repository
