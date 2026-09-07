@@ -13,7 +13,6 @@ workflows:
     '.github/workflows/dogfood-gate.yml':
         - 'actions/checkout@v4.3.1'
         - 'hyperpolymath/a2ml-ecosystem@main'
-        - 'hyperpolymath/k9-ecosystem@main'
     '.github/workflows/e2e.yml':
         - 'actions/checkout@v6.0.2'
         - 'goto-bus-stop/setup-zig@v2.2.1'
@@ -109,11 +108,6 @@ dependencies:
         commit: 'sha1-b6ce942d54b3528f7d7a30d63f57617005fc0d6a'
         owner_id: 6759885
         repo_id: 1275649586
-    'hyperpolymath/k9-ecosystem@main':
-        ref: 'main'
-        commit: 'sha1-347ee5d6a1b77831de56fe8da21a473724e4cac2'
-        owner_id: 6759885
-        repo_id: 1275650185
     'hyperpolymath/smtp-notify-action@v0.2.0':
         ref: 'v0.2.0'
         commit: 'sha1-ede1191ef6ff3ac02c4f4d9efdf837ee517e11d7'
