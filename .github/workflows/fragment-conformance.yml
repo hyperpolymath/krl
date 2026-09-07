@@ -18,21 +18,21 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout specification
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@v7.0.0
         with:
           persist-credentials: false
       - name: Checkout pinned QuandleDB implementation
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@v7.0.0
         with:
           repository: hyperpolymath/quandledb
-          ref: 4a00d5cacafd721aee1993bec23c164db425a70d
+          ref: f1d0010e4e614fcb2c8428e555b9cdbb279d4da7
           path: deps/quandledb
           persist-credentials: false
       - name: Record implementation revision
         run: git -C deps/quandledb rev-parse HEAD
       - name: Install Julia
-        uses: julia-actions/setup-julia@4c0cb0fce8556fdb04a90347310e5db8b1f98fb9 # v2.7.0
+        uses: julia-actions/setup-julia@v2.7.0
         with:
           version: '1.12.6'
-      - name: Check fragment acceptance and rejection
+      - name: Check fragment syntax, execution and explicit refusal
         run: julia --startup-file=no tests/conformance/retrieval_fragment.jl deps/quandledb

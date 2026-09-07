@@ -68,9 +68,7 @@ only and says so in its own header.
 * *The specification is contested.* `spec/grammar.ebnf` here and
 `quandledb/spec/grammar.ebnf` both claim to be KRL v0.1.0 and are disjoint on
 core vocabulary; `++|++` is bound to opposite meanings in the two. See README.
-* *No conformance suite.* There is no executable artefact that an
-implementation can be tested against, so "conforms to the KRL spec" is not
-currently a checkable claim.
+* *Fragment conformance exists.* `tests/conformance/retrieval_fragment.jl` tests syntax, AST structure, evaluator results and explicit refusal against a supplied QuandleDB checkout. The dedicated Julia fragment workflow runs it. Whole-language, construction, transformation and full witness conformance remain open.
 * *Proof obligations are unmet.* `PROOF-STATUS.adoc` records 0 of 8 obligations
 proven, 2 partial.
 * *`rust-ci.yml` gates nothing* — it calls the shared Rust reusable, but this
@@ -86,8 +84,7 @@ capability. Concretely:
 [arabic]
 . *Reconcile the two grammars* into one normative specification, resolving
 the `++|++` collision.
-. *Write an executable conformance suite* — programs plus expected results —
-so that spec conformance becomes testable rather than asserted.
+. *Extend the executable fragment conformance suite* with programs and expected results for each newly implemented operation family.
 . *Run that suite against `quandledb/server/krl/`*, the actual
 implementation (3,035 lines of Julia plus 1,732 lines of tests). One passing
 test per claimed capability is the D bar.

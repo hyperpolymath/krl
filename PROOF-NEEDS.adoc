@@ -35,12 +35,12 @@ a separate language and supplies no inherited KRL proof guarantee.
 [cols=",,,,,,",options="header",]
 |===
 |++#++ |Statement |Category |Prover |Priority |Effort |Status
-|KR-1 |Accepted fragment operations execute with defined semantics or explicit refusal |TP |Idris2 {plus} Julia property test |P1 |1d |NOT STARTED
+|KR-1 |Accepted fragment operations execute with defined semantics or explicit refusal |TP |Idris2 {plus} Julia property test |P1 |1d |PARTIAL (retrieval and assurance-refusal assertions run in the Julia fragment workflow; general proof open)
 |KR-2 |Construction/composition preserve checked port arity |TP |Idris2 {plus} typechecker impl |P1 |3d |NOT STARTED (typechecker not implemented)
 |KR-3 |`simplify` is semantics-preserving (KR-3a: R1; KR-3b: R2; KR-3c: R3) |ALG |Lean4 or property test against quandle iso |P1 |5d |OPEN (no KRL transformation implementation claimed)
 |KR-4 |Pretty/parse round-trip: `parse(pretty(e)) = e` |INV |Julia property test (cheap) |P1 |4h |NOT STARTED
 |KR-5 |Idris2 `SafePtr` / `Handle` are load-bearing in the Zig FFI surface |ABI |Decision {plus} wiring |P3 |2h |DECISION PENDING
-|KR-6 |Declared fragment agrees with `quandledb/server/krl/Parser.jl` |INV |Acceptance/rejection corpus |P1 |— |PARTIAL (11 checks; full conformance open)
+|KR-6 |Declared fragment agrees with `quandledb/server/krl/Parser.jl` |INV |Acceptance/rejection corpus |P1 |— |PARTIAL (syntax, AST and execution/refusal checks; full conformance open)
 |KR-7 |`sigma N`, `cup N`, etc. accepted iff `N ≥ 1` |INV |Grammar smoke test extension |P2 |1h |DRAFT (example lexical checks only)
 |KR-8 |`equivalent?` is sound w.r.t. fundamental-quandle isomorphism |DOM |Lean4 (factored through QuandleDB's QD-3) |P1 |5d |NOT STARTED
 |===
