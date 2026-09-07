@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= KRL surface contracts
+
+KRL's four operation families are construct, transform, resolve and retrieve.
+The design and the currently executable fragment have distinct surface contracts.
+They must not be concatenated into one grammar: their use of `|` is incompatible.
+
+[cols="1,2,2",options=header]
+|===
+| Surface | Syntax authority | Execution status
+| Construction/resolution draft
+| `spec/grammar.ebnf` in this repository; `\|` denotes tensor composition
+| Design only. The QuandleDB parser does not execute these programs.
+| Retrieval/candidate fragment
+| `quandledb/spec/grammar.ebnf`, implemented in `quandledb/server/krl/`;
+  `\|` separates stages
+| A running Julia parser/evaluator. Parsing a resolution request does not imply
+  an implementation can supply the requested evidence.
+|===
+
+`tests/conformance/retrieval_fragment.jl` runs a cross-repository acceptance and
+rejection corpus plus evaluator assertions against a supplied QuandleDB checkout. It includes unsupported
+construction syntax and the unimplemented rule, axiom, path and match forms as explicit rejection controls. The same CI command tests filtered retrieval, heuristic candidate metadata, stronger-assurance refusal and preservation of empty selections. This is fragment
+conformance, not proof of equivalence between an EBNF document and a parser.
+
+[source,console]
+----
+julia --startup-file=no tests/conformance/retrieval_fragment.jl /path/to/quandledb
+----
+
+The owning QuandleDB evaluator suite, `server/krl/test/resolution_boundary_test.jl`, also checks that an index
+collision cannot be promoted to exact, sufficient or necessary assurance.
+The current bucket provider supports heuristic candidates only. A `via` list
+is parsed but is not checked by that provider; results say so. An absent target
+means resolution is unavailable, not a proof of inequivalence.
+
+A future unified surface needs an explicit grammar decision, semantics for all
+four operations, port/arity checking, and executable witness checking. No
+separate reporting language or Tangle compilation dependency is precommitted.
