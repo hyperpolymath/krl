@@ -59,11 +59,11 @@
 </head>
 <body>
 <h1>KRL — Knot Resolution Language</h1>
-<p class="subtitle">each operation is grounded in topology, implemented by a dedicated repo, and exposed as syntax</p>
+<p class="subtitle">Four operation families; syntax examples below are design sketches. See spec/SURFACES.adoc for what executes.</p>
 
 <div class="grid">
   <div class="col-header">knot concepts</div>
-  <div class="col-header">repository</div>
+  <div class="col-header">design responsibility</div>
   <div class="col-header">KRL operation</div>
   <div class="col-header">language feature</div>
 
@@ -74,8 +74,8 @@
     <div><span class="tag">Object</span><span class="tag">Interface</span><span class="tag">Compose</span><span class="tag">Tensor</span></div>
   </div>
   <div class="cell r1">
-    <div class="cell-title">Tangle PL</div>
-    <div class="cell-sub">syntax layer</div>
+    <div class="cell-title">KRL / QuandleDB</div>
+    <div class="cell-sub">construction design</div>
   </div>
   <div class="cell r1">
     <div class="cell-title">Construct</div>
@@ -94,8 +94,8 @@
     <div><span class="tag">Structure</span><span class="tag">Transformation</span></div>
   </div>
   <div class="cell r2">
-    <div class="cell-title">KnotTheory.jl</div>
-    <div class="cell-sub">engine</div>
+    <div class="cell-title">KRL / QuandleDB</div>
+    <div class="cell-sub">transformation contract</div>
   </div>
   <div class="cell r2">
     <div class="cell-title">Transform</div>
@@ -134,8 +134,8 @@
     <div><span class="tag">Invariant</span></div>
   </div>
   <div class="cell r4 row-last">
-    <div class="cell-title">Skein.jl</div>
-    <div class="cell-sub">persistence</div>
+    <div class="cell-title">KRL / QuandleDB</div>
+    <div class="cell-sub">retrieval contract</div>
   </div>
   <div class="cell r4 row-last">
     <div class="cell-title">Retrieve</div>
@@ -148,8 +148,9 @@
 </div>
 
 <div class="footer">
-  <p>"Query" = row 4 only &nbsp;·&nbsp; "Resolution" spans rows 2–3, where knot topology is distinctive &nbsp;·&nbsp; hence KRL, not KQL</p>
-  <p class="octad">Tags show Verisim octad grounding for each operation</p>
+  <p>Skein.jl and KnotTheory.jl are independent Julia libraries that QuandleDB uses. Their purposes are not individual KRL operations.</p>
+  <p>Tangle is a separate Turing-complete language for knot mathematics. KRL does not compile into it or inherit its proofs.</p>
+  <p>The running fragment retrieves heuristic candidates. Full construction and checked equivalence resolution remain separate implementation obligations.</p>
 </div>
 </body>
 </html>

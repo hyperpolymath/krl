@@ -2,6 +2,8 @@
 (* KRL — Knot Resolution Language *)
 (* Grammar v0.1.0 (2026-04-05) — DRAFT *)
 (* Pronounced "curl" *)
+(* CONSTRUCTION/RESOLUTION DRAFT ONLY; not the QuandleDB parser contract. *)
+(* See spec/SURFACES.adoc for the separately executable retrieval fragment. *)
 
 (* =================================================================== *)
 (*  Top-level program                                                  *)
@@ -11,7 +13,7 @@ program           = { statement } ;
 
 statement         = binding
                   | expression_stmt
-                  | query ;
+                  | retrieval ;
 
 binding           = "let" , identifier , "=" , expression , ";" ;
 expression_stmt   = expression , ";" ;
@@ -52,10 +54,10 @@ cup_cap_gen       = "cup" , integer                                 (* cup on st
                   | "cap" , integer ;                               (* cap on strands i, i+1 *)
 
 (* =================================================================== *)
-(*  Queries (RETRIEVE)                                                 *)
+(*  Retrieval (RETRIEVE)                                                 *)
 (* =================================================================== *)
 
-query             = "find" , "where" , filter_list , ";" ;
+retrieval         = "find" , "where" , filter_list , ";" ;
 
 filter_list       = filter , { "and" , filter } ;
 
