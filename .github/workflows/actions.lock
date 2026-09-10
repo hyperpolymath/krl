@@ -12,7 +12,7 @@ workflows:
         - 'dependabot/fetch-metadata@v2.2.0'
     '.github/workflows/dogfood-gate.yml':
         - 'actions/checkout@v4.3.1'
-        - 'hyperpolymath/a2ml-ecosystem@main'
+        - 'hyperpolymath/deed-ecosystem@main'
     '.github/workflows/e2e.yml':
         - 'actions/checkout@v6.0.2'
         - 'goto-bus-stop/setup-zig@v2.2.1'
@@ -103,9 +103,9 @@ dependencies:
         commit: 'sha1-abea47f85e598557f500fa1fd2ab7464fcb39406'
         owner_id: 1006268
         repo_id: 212984112
-    'hyperpolymath/a2ml-ecosystem@main':
+    'hyperpolymath/deed-ecosystem@main':
         ref: 'main'
-        commit: 'sha1-b6ce942d54b3528f7d7a30d63f57617005fc0d6a'
+        commit: 'sha1-f7a40a4d5cc82b2e73f861119baa6818d77a448d'
         owner_id: 6759885
         repo_id: 1275649586
     'hyperpolymath/smtp-notify-action@v0.2.0':
