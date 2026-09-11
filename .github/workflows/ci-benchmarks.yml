@@ -1,0 +1,178 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# KRL CI: Benchmarks and Tests
+#
+# Runs:
+# 1. Language-specific tests (lexer, parser, queries)
+# 2. Central benchmarks from proven-tests-and-benchmarks repo
+# 3. GitGuardian secret scanning
+# 4. SonarQubeCloud quality analysis
+# 5. Existing E2E tests
+
+name: CI - Tests & Benchmarks
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'server/**'
+      - 'benches/**'
+      - 'tests/**'
+      - '.github/workflows/ci-benchmarks.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'server/**'
+      - 'benches/**'
+      - 'tests/**'
+      - '.github/workflows/ci-benchmarks.yml'
+  workflow_dispatch:
+  schedule:
+    # Nightly benchmarks
+    - cron: '0 2 * * *'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ci-benchmarks-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BENCHMARKS_REPO: hyperpolymath/proven
+  BENCHMARKS_PATH: benchmarks/krl
+
+jobs:
+  # Job 1: Run KRL-specific tests
+  krl-tests:
+    name: KRL Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout KRL repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.16.0
+
+      - name: Set up Julia
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.12'
+
+      - name: Run existing E2E tests
+        uses: ./.github/workflows/e2e.yml
+
+      - name: Run lexer/parser tests
+        run: |
+          # TODO: Replace with actual KRL lexer/parser tests
+          julia --color=yes server/krl/test/lexer_test.jl
+          julia --color=yes server/krl/test/parser_test.jl
+
+      - name: Run query tests
+        run: |
+          # TODO: Replace with actual KRL query tests
+          julia --color=yes server/krl/test/sql_test.jl
+
+  # Job 2: Run central benchmarks
+  benchmarks:
+    name: KRL Benchmarks
+    needs: krl-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout KRL repo
+        uses: actions/checkout@v4
+
+      - name: Checkout proven benchmarks repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.BENCHMARKS_REPO }}
+          path: proven
+
+      - name: Install benchmark dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq bc
+
+      - name: Run KRL benchmarks
+        run: |
+          cd proven/benchmarks/krl
+          # Run all benchmarks and compare with baselines
+          ./run.sh --all
+        
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: krl-benchmark-results
+          path: proven/benchmarks/krl/results.json
+          retention-days: 30
+
+  # Job 3: GitGuardian secret scanning
+  gitguardian:
+    name: GitGuardian Secret Scan
+    needs: krl-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: GitGuardian scan
+        uses: GitGuardian/ggshield-action@v1
+        with:
+          args: scan repo .
+        env:
+          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+
+  # Job 4: SonarQubeCloud quality analysis
+  sonarqube:
+    name: SonarQubeCloud Analysis
+    needs: krl-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SonarQube scan
+        uses: SonarSource/sonarqube-scan-action@v2
+        with:
+          args: >-
+            -Dsonar.projectKey=krl
+            -Dsonar.organization=hyperpolymath
+            -Dsonar.sources=src,server
+            -Dsonar.language=julia
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+
+  # Job 5: CodeQL analysis (existing)
+  codeql:
+    name: CodeQL Analysis
+    needs: krl-tests
+    uses: ./.github/workflows/codeql.yml
+    secrets: inherit
+
+  # Job 6: Dependabot (existing)
+  dependabot:
+    name: Dependabot
+    needs: krl-tests
+    uses: ./.github/workflows/dependabot-automerge.yml
+    secrets: inherit

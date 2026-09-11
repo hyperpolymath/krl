@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: MPL-2.0
+name: KRL fragment conformance
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  fragment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout specification
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          persist-credentials: false
+      - name: Checkout current QuandleDB implementation
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: hyperpolymath/quandledb
+          path: deps/quandledb
+          persist-credentials: false
+      - name: Record implementation revision
+        run: git -C deps/quandledb rev-parse HEAD
+      - name: Install Julia 1.12
+        run: |
+          set -euo pipefail
+          curl -fsSL https://install.julialang.org -o "$RUNNER_TEMP/juliaup-init.sh"
+          sh "$RUNNER_TEMP/juliaup-init.sh" --yes --default-channel 1.12
+          echo "$HOME/.juliaup/bin" >> "$GITHUB_PATH"
+      - name: Check fragment acceptance and rejection
+        run: julia --startup-file=no tests/conformance/retrieval_fragment.jl deps/quandledb
