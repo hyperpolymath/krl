@@ -119,10 +119,9 @@ for file in "${EXAMPLE_FILES[@]}"; do
     done
 
     # 4b. KR-7: generator indices must be POSITIVE (N >= 1).
-    # The canonical parser in KRLAdapter.jl raises a "zero index" error
-    # for `sigma 0`, `sigma_inv 0`, etc., and negative indices are
-    # outside the lexer's positive-Int recognition. The smoke test
-    # asserts that no committed example contains such a pattern.
+    # This is a draft/example constraint, not evidence of a running
+    # construction parser. The executable fragment is scoped separately
+    # in spec/SURFACES.adoc.
     #
     # See PROOF-NARRATIVE.md KR-7 and ASSUMPTIONS.md A-KR-2.1.
     # NB: grep returns 1 when nothing matches; under `set -e` we

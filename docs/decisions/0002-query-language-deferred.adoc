@@ -1,96 +1,25 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
-= Architecture Decision Record: 0002-query-language-deferred
-<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
-<!-- Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk> -->
+// Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Decision 0002: resolution and retrieval
 
-# 2. Query language deferred — querying stays a mode of KRL
+Revised 2026-09-07. Accepted. The filename is retained for existing links.
 
-Date: 2026-06-18
+KRL is a resolution language with construct, transform, resolve and retrieve
+operations. Retrieve recovers presentations, invariants, candidate matches,
+witnesses, prior resolutions and their explanations/provenance. It supports the
+resolution task without defining the language's entire purpose.
 
-## Status
+Generic selection, filtering, reporting and administration may remain engine or
+API operations. No additional branded language or compilation architecture is
+precommitted. A future proposal must establish an unmet user task and a precise
+semantic contract before adding another public surface.
 
-Accepted
+Skein.jl and KnotTheory.jl are independent Julia libraries. QuandleDB may use
+those libraries without redefining their purpose. Tangle is a separate
+Turing-complete language for knot mathematics. Shared subject matter implies no
+compilation dependency and transfers no proof guarantee to KRL.
 
-## Context
-
-KRL is a *resolution language*, not a query language. Its identity is the four
-operations — *construct*, *transform*, *resolve*, *retrieve* — and the four-verb
-shape is deliberate: it stops "querying" from becoming the whole identity of the
-language.
-
-A recurring pressure works against this:
-
-- Databases are *expected* to ship a query language; its apparent absence reads as
-  "toy" to evaluators arriving with SQL / Cypher / AQL muscle memory.
-- The *retrieve* operation, by name, can drag readers back toward "query language".
-- There is a genuine future need for non-resolution data operations: dashboards,
-  arbitrary filters, administrative analytics, bulk reporting, exploratory search,
-  index tuning.
-
-But the two failure modes are asymmetric:
-
-- *No query language* is a **messaging** problem — cheap, reversible, fixable with
-  documentation.
-- *A premature, weak query language* is a **reputation** problem — it invites direct
-  comparison with mature query languages on their own turf, where a young project
-  loses, and first impressions in developer tooling are durable. A bounced evaluator
-  is hard to win back.
-
-Query *access* already exists at the engine/API layer (Skein.jl composable
-predicates over SQLite; QuandleDB's filtered HTTP endpoints). What is declined here
-is a *first-class, branded query language* that competes as a paradigm. Those are
-different things.
-
-There is also a strategic-identity dimension. A capability framed as "a query
-sublanguage" is absorbable as a feature ("the next AQL add-in module"); a *named
-category* — resolution as a paradigm for equivalence / identity determination — is
-not. Keeping KRL a language rather than a query mode is therefore also how the work
-retains a distinct, attributable identity, especially if the broader bet (resolution
-as a general primitive for determining equivalent acts and things, including for AI)
-pays off.
-
-## Decision
-
-1. Querying remains a *mode of KRL* — the *retrieve* operation — not a first-class
-   sibling language. No separate query language is built now.
-
-2. *Retrieve* is defined narrowly. It recovers **resolution-relevant artefacts**:
-   presentations, invariants, witnesses, equivalence classes, prior resolutions,
-   explanations, and provenance. It is **not** arbitrary database querying.
-
-3. Generic data access (arbitrary filters, dashboards, reporting, analytics,
-   exploratory search, index tuning) is an *engine-layer* affordance (Skein.jl /
-   SQLite; QuandleDB endpoints), deliberately not elevated to a KRL operation.
-
-4. A separate query language is *deferred, not rejected*. It becomes warranted only
-   when sustained non-resolution database operations accumulate — the trigger list:
-   dashboards, arbitrary filters, administrative analytics, bulk reporting,
-   exploratory search, index tuning.
-
-5. *Pre-committed shape.* If/when that query language is built, it will be a
-   *KRL-family projection / reporting dialect that compiles to the same TangleIR and
-   engine* — one semantic core with a reporting surface — not an independent rival
-   paradigm. This makes it structurally impossible for the future query language to
-   be a "me-too" graph/relational language.
-
-## Consequences
-
-### Positive
-
-- KRL leads from strength (resolution — where it has no competitor) rather than
-  fighting established query languages on their turf.
-- The distinctive, attributable identity ("knot resolution", a named paradigm) is
-  preserved against commoditisation.
-- No premature surface to poison first impressions.
-
-### Negative
-
-- Evaluators expecting a headline query language must be pointed at the engine-layer
-  access path and the *retrieve* clause; the absence must be *explained*, not shipped
-  around.
-
-### Neutral
-
-- The decision is revisited when the trigger conditions accrue; this ADR is then
-  superseded by the ADR that specifies the deferred dialect.
+The implemented retrieval/candidate fragment and the construction/resolution
+draft are separately scoped in `../../spec/SURFACES.adoc`. A successful retrieval
+must state the assurance actually established. Index membership alone cannot
+satisfy a demand for a checked equivalence witness.
