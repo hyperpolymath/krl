@@ -7,13 +7,13 @@
 # applied by the probot/settings app when changes are pushed to the default
 # branch. Install the app at: https://github.com/apps/settings
 #
-# Template file — replace krl and {{DESCRIPTION}} with actual values.
+# Template file — replace krl and KRL (pronounced 'curl') - Knot Resolution Language,  a standalone DSL for knot/tangle construction, transformation, resolution, and retrieval with actual values.
 
 # ─── Repository Settings ───────────────────────────────────────────────────────
 
 repository:
   name: "krl"
-  description: "{{DESCRIPTION}}"
+  description: "KRL (pronounced 'curl') - Knot Resolution Language,  a standalone DSL for knot/tangle construction, transformation, resolution, and retrieval"
   homepage: "https://github.com/hyperpolymath/krl"
   private: false
   has_issues: true
