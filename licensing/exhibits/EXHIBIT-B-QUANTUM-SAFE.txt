@@ -1,0 +1,9 @@
+SPDX-License-Identifier: MPL-2.0
+EXHIBIT B — Quantum-Safe Provenance
+
+Long-term attribution uses Quantum-Safe Provenance as defined in hyperpolymath standards.
+
+All contributions are recorded with hash-based provenance to ensure attribution remains verifiable
+even in the presence of quantum adversaries.
+
+This exhibit documents the provenance approach for KRL (Knot Resolution Language).

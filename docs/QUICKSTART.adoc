@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= Quickstart
+= Quickstart — KRL
 :toc: preamble
 
 Get up and running in 60 seconds.
@@ -9,18 +9,25 @@ Get up and running in 60 seconds.
 
 * Git 2.40+
 * just (command runner)
-* Your language toolchain (see Justfile for details)
+* Zig 0.16.0+ (FFI)
+* Julia 1.12+ (conformance tests, optional)
 
-== From Template (New Project)
+== Clone and Test
 
 [source,bash]
 ----
-git clone https://github.com/hyperpolymath/rsr-template-repo my-project
-cd my-project
-rm -rf .git && git init -b main
-just init       # interactive placeholder replacement
+git clone https://github.com/hyperpolymath/krl.git
+cd krl
+bash tests/smoke/grammar_smoke.sh
+cd src/interface/ffi && zig build test
 ----
 
 == Project Structure
 
-See README.adoc in the root for the Dual-Track architecture summary.
+See link:../README.adoc[README.adoc] in the root for overview and link:../EXPLAINME.adoc[EXPLAINME.adoc] for receipts.
+
+See also root quickstarts:
+
+- link:../QUICKSTART-DEV.adoc[Developer quickstart]
+- link:../QUICKSTART-USER.adoc[User quickstart]
+- link:../QUICKSTART-MAINTAINER.adoc[Maintainer quickstart]

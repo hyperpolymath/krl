@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MPL-2.0
-# Adjustfile — Drift-tolerance contract for rsr-template-repo
+# Adjustfile — Drift-tolerance contract for krl
 # Author: Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 #
 # Cumulative-drift catchment: tolerance bands + corrective actions.
@@ -8,7 +8,7 @@
 # Fix with: adjust fix (applies deterministic patches; advisory otherwise)
 
 @abstract:
-Drift tolerances and corrective actions for rsr-template-repo. Unlike
+Drift tolerances and corrective actions for krl. Unlike
 MUST (hard gate), ADJUST tracks cumulative drift against tolerance bands
 and proposes corrective actions. Advisory — it warns and trends, it does
 not block.
@@ -19,7 +19,7 @@ not block.
 ### placeholder-drift
 - description: Template placeholders should be replaced when copied
 - tolerance: 0 placeholder markers in copied repos
-- corrective: Search and replace all {{PLACEHOLDER}} markers
+- corrective: Search and replace all PLACEHOLDER markers
 - severity: advisory
 - notes: This check only applies to repos that copied from this template
 

@@ -7,7 +7,7 @@
 # Seal:  selur seal krl:latest
 
 # --- Build stage ---
-FROM cgr.dev/chainguard/wolfi-base:latest AS build
+FROM cgr.dev/chainguard/wolfi-base:latest@sha256:65e1acb87a2bf356b92c5f70f3980f03b4bb51dfd483c834e01557525f15c1d9 AS build
 
 # TODO: Install build dependencies for your stack
 # Examples:
@@ -25,7 +25,7 @@ COPY . .
 #   RUN zig build -Doptimize=ReleaseSafe
 
 # --- Runtime stage ---
-FROM cgr.dev/chainguard/static:latest
+FROM cgr.dev/chainguard/static:latest@sha256:5e9c88174a28c259c349f308dd661a6ec61ed5f8c72ecfaefb46cceb811b55a1
 
 # Copy built artifact from build stage
 # TODO: Replace with your binary/artifact path

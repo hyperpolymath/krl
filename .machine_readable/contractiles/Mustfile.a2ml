@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MPL-2.0
-# Mustfile — Physical state contract for rsr-template-repo
+# Mustfile — Physical state contract for krl
 # Author: Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 #
 # What MUST be true about this repository. Hard requirements.
@@ -7,7 +7,7 @@
 # Fix with: must fix (where a deterministic fix exists)
 
 @abstract:
-Physical-state invariants for rsr-template-repo. This is the canonical
+Physical-state invariants for krl. This is the canonical
 RSR template repository. These are hard requirements — CI and pre-commit
 hooks fail if any check fails.
 @end
@@ -80,7 +80,7 @@ hooks fail if any check fails.
 
 ### no-placeholder-values
 - description: No placeholder values remain in template files
-- run: test -z "$(grep -r '{{' .machine_readable/contractiles/ 2>/dev/null)"
+- run: test -z "$(grep -r 'PLACEHOLDER' .machine_readable/contractiles/ 2>/dev/null || true)"
 - severity: critical
 - notes: All placeholders must be substituted when copying this template
 

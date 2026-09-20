@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Maintenance Checklist — KRL
+:toc:
+
+This file is the human-readable source for `.machine_readable/policies/MAINTENANCE-CHECKLIST.a2ml`.
+
+== Three-Axis Model
+
+- Axis 1 (scope): must > intend > like
+- Axis 2 (maintenance): corrective > adaptive > perfective
+- Axis 3 (audit): systems > compliance > effects
+
+== Scoping (Axis 1)
+
+- Read README, ROADMAP, PROOF-STATUS, and current CI/security docs.
+- Scan for TODO/FIXME/XXX/HACK/STUB/PARTIAL markers.
+- Scan Idris unsound markers: believe_me, assert_total.
+- Produce must/intend/like buckets.
+
+== Maintenance (Axis 2)
+
+- Corrective first: fix breakage, defects, regressions, safety issues.
+- Adaptive second: reconcile scope changes, remove stale references, cull obsolete work.
+- Perfective third: derived from honest state after corrective/adaptive.
+
+== Audit (Axis 3)
+
+- Systems: required systems present and operating.
+- Compliance: seams/compromises/exception register, bounded exceptions, anti-drift checks. Tooling: panic-attack.
+- Effects: benchmark execution/results and maintainer status dialogue/review. Tooling: ecological checking with sustainabot guidance.
+
+== Cleanup
+
+- Root cleanup, stale work cull, docs parity, machine-human sync, compliance finish-off, effects finish-off, release-prep summary, next-actions.
+
+== Must Files
+
+- Root control: .gitignore, .gitattributes, .editorconfig, .tool-versions, Containerfile, Justfile
+- Ownership: MAINTAINER, .github/CODEOWNERS
+- Machine-readable: .machine_readable/anchors/ANCHOR.a2ml, contractiles, ai, bot_directives
+- Contractiles: Mustfile, Trustfile, Intentfile
+- Security: .well-known/security.txt, CI security scan
+- Quality gate: format, lint, unit, integration, p2p, e2e, bench-smoke, docs-check, security-scan
+- ABI/FFI: Idris2 ABI in src/interface/abi, Zig FFI in src/interface/ffi

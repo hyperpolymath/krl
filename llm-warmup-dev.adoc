@@ -1,6 +1,6 @@
-== LLM Warmup — rsr-template-repo (Developer)
+== LLM Warmup — krl (Developer)
 
-=== What is rsr-template-repo?
+=== What is krl?
 
 See README.adoc for overview.
 

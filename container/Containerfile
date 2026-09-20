@@ -48,7 +48,7 @@
 #   RUN zig build -Doptimize=ReleaseFast
 #   # Output: /build/zig-out/bin/krl
 #
-FROM cgr.dev/chainguard/wolfi-base:latest AS builder
+FROM cgr.dev/chainguard/wolfi-base:latest@sha256:65e1acb87a2bf356b92c5f70f3980f03b4bb51dfd483c834e01557525f15c1d9 AS builder
 
 # TODO: Install your language toolchain
 RUN apk add --no-cache build-base
@@ -66,7 +66,7 @@ COPY . .
 # Minimal production image. Only the compiled binary/release and runtime
 # dependencies are included. No compilers, no source code, no build tools.
 #
-FROM cgr.dev/chainguard/wolfi-base:latest
+FROM cgr.dev/chainguard/wolfi-base:latest@sha256:65e1acb87a2bf356b92c5f70f3980f03b4bb51dfd483c834e01557525f15c1d9
 
 # OCI image labels (compatible with cerro-torre .ctp bundle metadata)
 LABEL org.opencontainers.image.title="KRL" \

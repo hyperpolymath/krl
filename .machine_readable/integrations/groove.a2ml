@@ -15,8 +15,9 @@
 
   ; Primary port — MUST be unique across the ecosystem.
   ; Check PORT-REGISTRY.md in the standards repo before assigning.
-  ; https://github.com/hyperpolymath/standards/blob/main/PORT-REGISTRY.md
-  (port 0)  ; 0 = not assigned yet — run `just groove-setup` to assign
+  ; https://github.com/hyperpolymath/standards/blob/main/0-canon/PORT-REGISTRY.adoc
+  ; Assigned 2026-09-20: 6462 (free in 6460-6500 probe band, not colliding with groove-ref 6465, gossamer 6470)
+  (port 6462)
 
   ; API surfaces this project exposes (dodeca-API)
   ; Remove lines for API types you don't use.

@@ -31,14 +31,7 @@ into the other relevant repos. `◇` marks proposals not yet canonical.
   SPDX headers, no banned files) stays green; SPDX headers on all files.
 
 | *INTEND*
-| *Finish the RSR-template instantiation* (the live debt per `AFFIRMATION.adoc`):
-  rename the `Justfile` off `rsr-template-repo`, replace the `{project-name}`
-  token in EXPLAINME and the ~8 remaining `{{PLACEHOLDER}}` files, add
-  `.machine_readable/anchors/ANCHOR.a2ml` + `src/interface/abi`, assign the
-  Groove port, digest-pin the Containerfile. Discharge the `PROOF-NEEDS`
-  obligations (Typing / Invariant / Algorithm / ABI — currently 0/7). Retrieve
-  recovers resolution-relevant artefacts, *not* arbitrary query; keep
-  polynomial/colouring computation in the engine, invoked not language-level ◇.
+| *RSR-template instantiation complete (2026-09-20)*: Justfile now `krl`, EXPLAINME token replaced, `[PLACEHOLDER]` files cleared, `.machine_readable/anchors/ANCHOR.a2ml` + `src/interface/abi` added, Groove port 6462 assigned, Containerfile digest-pinned. Remaining: discharge `PROOF-NEEDS` obligations (Typing / Invariant / Algorithm / ABI — currently 0/8, 3 partial including KR-6 fragment conformance). Retrieve recovers resolution-relevant artefacts, *not* arbitrary query; keep polynomial/colouring computation in the engine, invoked not language-level ◇.
 
 | *WISH*
 | A language *family*: KRL (resolution) + a quandle-algebra language

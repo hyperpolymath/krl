@@ -55,7 +55,7 @@ perfective = 10   # % for SPDX headers, doc updates, formatting, style
 # Customise this per project — the template default is generic.
 
 [methodology.unique-strength]
-description = "{{PROJECT_UNIQUE_STRENGTH}}"
+description = "KRL — Knot Resolution Language: compositional DSL for constructing, transforming, resolving, and retrieving topological objects (tangles, knots, links) with Idris2 ABI and Zig FFI"
 deepen-not-broaden = true
 
 # ============================================================================
@@ -101,7 +101,7 @@ constraints = [
 # These rules detect corrupt/template/stale state files.
 
 [methodology.state-validation]
-reject-if-contains = ["{{PLACEHOLDER}}", "KRL", "rsr-template-repo"]
+reject-if-contains = ["PLACEHOLDER", "rsr-template"]  # detects uninstantiated template state via keyword markers
 reject-if-project-name-mismatch = true
 staleness-threshold-days = 90
 fallback-files = ["TODO.md", "TODO.adoc", "ROADMAP.adoc", "README.adoc"]

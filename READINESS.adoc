@@ -99,7 +99,7 @@ can be shown to implement.
 [[iteration-0--x-2026-04-05]]
 ==== Iteration 0 — X (2026-04-05)
 
-Templated from `rsr-template-repo`. Zero KRL-specific content.
+Templated from RSR template. Zero KRL-specific content at inception.
 
 [[iteration-1--promoted-to-e-2026-04-05]]
 ==== Iteration 1 — promoted to E (2026-04-05)
