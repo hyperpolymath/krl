@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MPL-2.0
+# Owner: Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
 # RSR Standard Justfile Template
@@ -19,11 +20,11 @@ set positional-arguments := true
 import? "contractile.just"
 
 # Project metadata — customize these
-project := "rsr-template-repo"
+project := "krl"
 OWNER := "hyperpolymath"
-REPO := "rsr-template-repo"
+REPO := "krl"
 version := "0.1.0"
-tier := "infrastructure"  # 1 | 2 | infrastructure
+tier := "library"  # 1 | 2 | infrastructure
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # DEFAULT & HELP
@@ -58,7 +59,7 @@ info:
 # INIT — Bootstrap a new project from this template
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Interactive project bootstrap — replaces all {{PLACEHOLDER}} tokens
+# Interactive project bootstrap — replaces all placeholder tokens
 init:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -317,10 +318,13 @@ verify-template:
     echo "Checking for unreplaced template placeholders..."
     FOUND=0
 
-    # Check for double-brace placeholder patterns
-    HITS=$(grep -rn '{{'{{'}}[A-Z_]*{{'}}'}}' --include="*.adoc" --include="*.md" --include="*.a2ml" \
+    # Check for double-brace placeholder patterns (using hex to avoid self-match)
+    LB=$(printf '\x7b\x7b')
+    RB=$(printf '\x7d\x7d')
+    PATTERN="${LB}[A-Z_]*${RB}"
+    HITS=$(grep -rn "$PATTERN" --include="*.adoc" --include="*.md" --include="*.a2ml" \
            --include="*.scm" --include="*.toml" --include="*.yml" --include="*.yaml" \
-           . 2>/dev/null | grep -v 'node_modules\|\.git/' | grep -v 'PLACEHOLDERS.adoc' || true)
+           . 2>/dev/null | grep -v 'node_modules\|\.git/' | grep -v 'PLACEHOLDERS.adoc' | grep -v '.machine_readable/self-validating/' || true)
     if [ -n "$HITS" ]; then
         echo ""
         echo "⚠ Unreplaced placeholders found:"
@@ -328,9 +332,10 @@ verify-template:
         FOUND=1
     fi
 
-    # Check for template defaults still present
-    if grep -q 'rsr-template-repo' Justfile 2>/dev/null; then
-        echo "⚠ Justfile still references 'rsr-template-repo' — update project name"
+    # Check for template defaults still present (avoid self-match via concatenation)
+    TMPL="rsr-template""-repo"
+    if grep -q "$TMPL" Justfile 2>/dev/null; then
+        echo "⚠ Justfile still references template name — update project name"
         FOUND=1
     fi
 
@@ -342,7 +347,7 @@ verify-template:
 
     # Check for empty SCM files
     for f in .machine_readable/6a2/STATE.a2ml .machine_readable/6a2/META.a2ml .machine_readable/6a2/ECOSYSTEM.a2ml; do
-        if [ -f "$f" ] && grep -q '{{'{{'}}' "$f" 2>/dev/null; then
+        if [ -f "$f" ] && grep -q "$PATTERN" "$f" 2>/dev/null; then
             echo "⚠ $f still has template placeholders"
             FOUND=1
         fi
@@ -862,7 +867,7 @@ container-init:
 
     if [ ! -d "container" ]; then
         echo "Error: container/ directory not found."
-        echo "This repo may not have been created from rsr-template-repo."
+        echo "This repo may not have been created from krl template."
         exit 1
     fi
 
@@ -1295,7 +1300,7 @@ assail:
 
 # Self-diagnostic — checks dependencies, permissions, paths
 doctor:
-    @echo "Running diagnostics for rsr-template-repo..."
+    @echo "Running diagnostics for krl..."
     @echo "Checking required tools..."
     @command -v just >/dev/null 2>&1 && echo "  [OK] just" || echo "  [FAIL] just not found"
     @command -v git >/dev/null 2>&1 && echo "  [OK] git" || echo "  [FAIL] git not found"
@@ -1305,7 +1310,7 @@ doctor:
 
 # Guided tour of key features
 tour:
-    @echo "=== rsr-template-repo Tour ==="
+    @echo "=== krl Tour ==="
     @echo ""
     @echo "1. Project structure:"
     @ls -la
@@ -1320,12 +1325,12 @@ tour:
 
 # Open feedback channel with diagnostic context
 help-me:
-    @echo "=== rsr-template-repo Help ==="
+    @echo "=== krl Help ==="
     @echo "Platform: $(uname -s) $(uname -m)"
     @echo "Shell: $SHELL"
     @echo ""
     @echo "To report an issue:"
-    @echo "  https://github.com/hyperpolymath/rsr-template-repo/issues/new"
+    @echo "  https://github.com/hyperpolymath/krl/issues/new"
     @echo ""
     @echo "Include the output of 'just doctor' in your report."
 

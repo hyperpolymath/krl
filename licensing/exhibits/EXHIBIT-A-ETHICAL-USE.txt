@@ -1,0 +1,10 @@
+SPDX-License-Identifier: MPL-2.0
+EXHIBIT A — Ethical Use Restriction
+
+This project is licensed under MPL-2.0 with an additional ethical use restriction:
+
+- The software must not be used to facilitate harm, discrimination, or violation of human rights.
+- The software must not be used for surveillance that violates privacy norms.
+- Attribution must be preserved.
+
+This exhibit is part of the Palimpsest licensing framework used across hyperpolymath repositories.

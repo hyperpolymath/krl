@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = ABI/FFI Standards
-{{~ Aditionally delete this line and fill out the template below ~}}
+NOTE: Template line removed — this is now KRL-specific documentation
 
 # KRL ABI/FFI Documentation
 

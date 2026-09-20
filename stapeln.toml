@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: MPL-2.0
-# stapeln.toml — Layer-based container build for rsr-template-repo
+# stapeln.toml — Layer-based container build for krl
 #
 # stapeln builds containers as composable layers (German: "to stack").
 # Each layer is independently cacheable, verifiable, and signable.
 
 [metadata]
-name = "rsr-template-repo"
+name = "krl"
 version = "0.1.0"
-description = "rsr-template-repo container service"
+description = "krl container service"
 author = "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>"
 license = "MPL-2.0"
 registry = "ghcr.io/hyperpolymath"
@@ -21,7 +21,7 @@ runtime = "podman"
 
 [layers.base]
 description = "Chainguard Wolfi minimal base"
-from = "cgr.dev/chainguard/wolfi-base:latest"
+from = "cgr.dev/chainguard/wolfi-base:latest@sha256:65e1acb87a2bf356b92c5f70f3980f03b4bb51dfd483c834e01557525f15c1d9"
 cache = true
 verify = true
 
@@ -32,18 +32,18 @@ packages = []
 cache = true
 
 [layers.build]
-description = "rsr-template-repo build"
+description = "krl build"
 extends = "toolchain"
 commands = []
 
 [layers.runtime]
 description = "Minimal runtime"
-from = "cgr.dev/chainguard/wolfi-base:latest"
+from = "cgr.dev/chainguard/wolfi-base:latest@sha256:65e1acb87a2bf356b92c5f70f3980f03b4bb51dfd483c834e01557525f15c1d9"
 packages = ["ca-certificates", "curl"]
 copy-from = [
     { layer = "build", src = "/app/", dst = "/app/" },
 ]
-entrypoint = ["/app/rsr-template-repo"]
+entrypoint = ["/app/krl"]
 user = "nonroot"
 
 # ── Security ───────────────────────────────────────────────────

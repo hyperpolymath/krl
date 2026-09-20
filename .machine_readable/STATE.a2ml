@@ -1,27 +1,77 @@
-;; SPDX-License-Identifier: MPL-2.0
-;; Project state — update throughout each session
-(state
-  (metadata
-    (version "1.0.1")
-    (project "rsr-template-repo")
-    (last-updated "2026-04-04"))
-  (project-context
-    (description "RSR Standard Repository Template — baseline for all hyperpolymath projects")
-    (primary-language "Idris2 (ABI) + Zig (FFI)")
-    (status "testing-complete"))
-  (current-position
-    (phase "testing")
-    (completion-percentage 100)
-    (milestone "CRG C - Testing & Benchmarking complete"))
-  (testing-summary
-    (validation-script "scripts/validate-template.sh: PASS (0 errors)")
-    (workflow-tests "tests/workflows/validate_workflows_test.sh: PASS (21/21 workflows)")
-    (integration-tests "test/integration_test.zig: PASS (placeholder template)")
-    (e2e-tests "tests/e2e/template_instantiation_test.sh: READY")
-    (benchmarks "benches/template_bench.sh: PASS (5 suites)")
-    (zig-build "Zig 0.15.2 compatible: PASS"))
-  (critical-next-actions
-    ("Commit test suite"
-     "Push to GitHub"
-     "Verify CI workflows pass"
-     "Document test instantiation patterns")))
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# STATE.a2ml — Project state checkpoint
+# KRL (Knot Resolution Language, pronounced 'curl') — standalone DSL
+
+[metadata]
+project = "krl"
+version = "0.2.0"
+last-updated = "2026-09-20"
+status = "active"
+
+[project-context]
+name = "krl"
+purpose = "KRL (Knot Resolution Language, pronounced 'curl') — standalone DSL for knot/tangle construction, transformation, resolution, and retrieval"
+primary-language = "Idris2 (ABI) + Zig (FFI) + Julia (QuandleDB parser)"
+completion-percentage = 85
+
+[position]
+phase = "maintenance"
+maturity = "beta"
+
+[route-to-mvp]
+milestones = [
+  { name = "Phase 0: Core scaffolding (justfile, CI/CD, .machine_readable)", completion = 100 },
+  { name = "Phase 1: ABI/FFI standard (Idris2/Zig templates)", completion = 100 },
+  { name = "Phase 1b: AI Gatekeeper Protocol (0-AI-MANIFEST.a2ml)", completion = 100 },
+  { name = "Phase 1c: TOPOLOGY.md standard and guide", completion = 100 },
+  { name = "Phase 1d: Maintenance gate (axes, checklist, approach)", completion = 100 },
+  { name = "Phase 1e: Trustfile / contractiles", completion = 100 },
+  { name = "Phase 2: RSR template instantiation complete", completion = 100 },
+  { name = "Phase 2b: KR-6 fragment conformance + v0.1.0 subset doc", completion = 100 },
+  { name = "Phase 3: PROOF-NEEDS discharge (KR-1..KR-8)", completion = 37 },
+  { name = "Phase 4: Container ecosystem templates (stapeln)", completion = 100 },
+]
+
+[testing-summary]
+validation-script = "just validate-rsr: PASS"
+verify-template = "just verify-template: PASS"
+workflow-tests = "tests/workflows/validate_workflows_test.sh: PASS"
+integration-tests = "src/interface/ffi/test/integration_test.zig: PASS (requires zig)"
+e2e-tests = "tests/e2e.sh: PASS (requires zig)"
+grammar-smoke = "tests/smoke/grammar_smoke.sh: PASS 20"
+aspect-tests = "tests/aspect_tests.sh: PASS 4"
+fragment-conformance = "tests/conformance/retrieval_fragment.jl: PASS (requires Julia + quandledb)"
+differential-test = "tests/conformance/differential_test.jl: PASS (design + determinism, two-parser VOID)"
+benchmarks = "benches/: pending"
+zig-build = "Zig 0.16.0 compatible: PASS (requires zig)"
+
+[blockers-and-issues]
+# No active blockers. Issues #38 and #24 closed 2026-09-20.
+
+[critical-next-actions]
+actions = [
+  "Discharge remaining PROOF-NEEDS obligations KR-1..KR-8",
+  "Implement full KRL parser in Zig with Idris2 proofs",
+  "Expand Nix/Guix development shell templates",
+]
+
+[maintenance-status]
+last-run-utc = "2026-09-20"
+last-report = "docs/reports/maintenance/latest.json"
+last-result = "pass"
+open-warnings = 0
+open-failures = 0
+
+[ecosystem]
+part-of = ["KRL Stack", "QuandleDB ecosystem"]
+depends-on = ["tangle", "quandledb", "Skein.jl", "KnotTheory.jl"]
+
+# ---------------------------------------------------------------------------
+# KRL specific state:
+# - RSR instantiation complete 2026-09-20 (Issue #38)
+# - KR-6 two-parser equivalence VOID, fragment conformance now (Issue #24)
+# - v0.1.0 subset documented in docs/v0.1.0-subset.md
+# - canonical projection design preserved in tests/conformance/differential_test.jl
+# ---------------------------------------------------------------------------

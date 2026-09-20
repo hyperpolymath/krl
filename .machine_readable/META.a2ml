@@ -1,10 +1,61 @@
-;; SPDX-License-Identifier: MPL-2.0
-;; Architecture decisions and development practices
-(meta
-  (version "1.0.0")
-  (project "krl")
-  (architecture-decisions)
-  (development-practices
-    (code-review "required")
-    (branch-protection "enabled")
-    (ci-cd "github-actions")))
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# META.a2ml — Project meta-level information
+# Architecture decisions, design rationale, governance.
+# KRL — Knot Resolution Language surface.
+
+[metadata]
+version = "1.0.0"
+last-updated = "2026-09-20"
+project = "krl"
+
+[project-info]
+type = "library"
+languages = ["zig", "julia"]
+license = "MPL-2.0"
+author = "Jonathan D.A. Jewell (hyperpolymath)"
+
+[architecture-decisions]
+# ADR format: status = proposed | accepted | deprecated | superseded | rejected
+# RSR standard adopted 2026-02-14
+# KRL is resolution DSL not query language 2026-09-07
+# KRLAdapter.jl discarded, fragment grammar vs parser agreement now KR-6 2026-09-20
+
+[development-practices]
+build-tool = "just"
+container-runtime = "podman"
+ci-platform = "github-actions"
+package-manager = "guix"
+code-review = "required"
+branch-protection = "enabled"
+
+[maintenance-axes]
+scoping-first = true
+execution-order = "axis-1 > axis-2 > axis-3"
+axis-1 = "must > intend > like"
+axis-2 = "corrective > adaptive > perfective"
+axis-3 = "systems > compliance > effects"
+
+[scoping]
+sources = "README, roadmap, status docs, maintenance checklist, CI/security docs"
+marker-scan = "TODO/FIXME/XXX/HACK/STUB/PARTIAL"
+idris-unsound-scan = "believe_me/assert_total"
+
+[axis-2-maintenance-rules]
+corrective-first = true
+adaptive-second = true
+adaptive-focus = "scope-change reconciliation, stale-reference removal, obsolete-work culling"
+perfective-third = true
+perfective-source = "axis-1 honest state after corrective/adaptive updates"
+
+[axis-3-audit-rules]
+audit-focus = "systems in place, documentation explains actual state, safety/security accounted for, observed effects reviewed"
+compliance-focus = "seams/compromises/exception register, bounded exceptions, anti-drift checks"
+drift-risk-example = "single exception broadening into policy violation (e.g. ReScript->TypeScript spread)"
+effects-evidence = "benchmark execution/results and maintainer status dialogue/review"
+
+[design-rationale]
+# KRL is resolution DSL: Construct / Transform / Resolve / Retrieve
+# Lower to TangleIR, rest on Tangle type-safety, run against QuandleDB+Skein substrate
+# Not merely a query language

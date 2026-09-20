@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// Template: QUICKSTART-DEV.adoc — clone → build → test → PR
-// Replace rsr-template-repo, {{BUILD_CMD}}, {{TEST_CMD}}, {{LANG_STACK}} with actuals
-= rsr-template-repo — Quick Start for Developers
+= KRL — Quick Start for Developers
 :toc:
 :toclevels: 2
 
 == Tech Stack
 
-{{LANG_STACK}}
+- Idris2 (ABI definitions) + Zig (FFI bridge) + Julia (QuandleDB parser/evaluator)
+- Just (task runner), Podman (containers), Chainguard Wolfi base images
 
 == Set Up Development Environment
 
@@ -30,8 +29,8 @@ nix develop
 
 [source,bash]
 ----
-git clone https://github.com/hyperpolymath/rsr-template-repo.git
-cd rsr-template-repo
+git clone https://github.com/hyperpolymath/krl.git
+cd krl
 just setup-dev
 ----
 
@@ -39,30 +38,37 @@ just setup-dev
 
 [source,bash]
 ----
-{{BUILD_CMD}}
+just build
+# Or directly:
+cd src/interface/ffi && zig build
 ----
 
 == Test
 
 [source,bash]
 ----
-{{TEST_CMD}}
+just test
+# Or directly:
+bash tests/e2e.sh
+bash tests/smoke/grammar_smoke.sh
+cd src/interface/ffi && zig build test
+julia --startup-file=no tests/conformance/retrieval_fragment.jl /path/to/quandledb
 ----
 
 == Project Structure
 
 [source]
 ----
-rsr-template-repo/
-├── src/                  # Source code
-├── src/abi/              # Idris2 ABI definitions (if applicable)
-├── ffi/zig/              # Zig FFI bridge (if applicable)
-├── tests/                # Test suite
-├── docs/                 # Documentation
-├── .machine_readable/    # Checkpoint files (STATE, META, ECOSYSTEM)
+krl/
+├── spec/                 # Grammar specification (grammar.ebnf, SURFACES.adoc)
+├── src/interface/abi/    # Idris2 ABI definitions (Types.idr, Layout.idr, Foreign.idr)
+├── src/interface/Abi/    # Uppercase alias (same content, legacy)
+├── src/interface/ffi/    # Zig FFI bridge (build.zig, src/main.zig)
+├── examples/             # Example KRL programs (4 known)
+├── tests/                # Test suite (smoke, conformance, e2e, aspect)
+├── docs/                 # Documentation (decisions, practice, maintenance)
+├── .machine_readable/    # Checkpoint files (STATE, META, ECOSYSTEM, anchors)
 ├── Justfile              # Task runner recipes
-├── guix.scm              # Guix environment
-├── flake.nix             # Nix environment (fallback)
 └── 0-AI-MANIFEST.a2ml    # AI agent entry point
 ----
 
@@ -70,11 +76,12 @@ rsr-template-repo/
 
 [source,bash]
 ----
-just build          # Build the project
-just test           # Run tests
+just build          # Build the project (FFI)
+just test           # Run tests (e2e + aspect + smoke + ffi-unit)
 just doctor         # Self-diagnostic
 just lint           # Lint and format
-just panic-scan     # Security scan via panic-attacker
+just verify-template # Check template instantiation
+just validate-rsr   # RSR compliance check
 just tour           # Guided tour of the codebase
 ----
 
@@ -84,15 +91,19 @@ just tour           # Guided tour of the codebase
 ----
 just lint           # Format and lint
 just test           # All tests pass
-just panic-scan     # No new security issues
+just verify-template && just validate-rsr  # RSR gates
 ----
 
 == Contractile Invariants
 
-Read `.machine_readable/MUST.contractile` before making changes.
-Key invariants that must never be violated:
+Read `.machine_readable/contractiles/Mustfile.a2ml` before making changes.
+Key invariants:
 
-{{MUST_INVARIANTS}}
+- LICENSE, README.adoc, SECURITY.md, CONTRIBUTING.md must exist
+- .machine_readable/STATE.a2ml, META.a2ml, ECOSYSTEM.a2ml, anchors/ANCHOR.a2ml must exist
+- Containerfile base images must be digest-pinned (@sha256:)
+- Groove manifest must have non-zero port
+- src/interface/abi, ffi, generated must exist
 
 == LLM/AI Agent Development
 
@@ -100,13 +111,13 @@ If using an AI assistant, load the warmup context first:
 
 [source,bash]
 ----
-just llm-context    # Outputs role-appropriate context
+cat 0-AI-MANIFEST.a2ml
 ----
 
-Or read `0-AI-MANIFEST.a2ml` and `.claude/CLAUDE.md` directly.
+Or read `docs/developer/` and `PROOF-NARRATIVE.adoc` directly.
 
 == Get Help
 
 * **Architecture**: link:EXPLAINME.adoc[EXPLAINME.adoc]
-* **Wiki**: https://github.com/hyperpolymath/rsr-template-repo/wiki
-* **Report issue**: `just help-me`
+* **Grammar**: link:spec/grammar.ebnf[grammar.ebnf], link:spec/SURFACES.adoc[SURFACES.adoc]
+* **Report issue**: https://github.com/hyperpolymath/krl/issues

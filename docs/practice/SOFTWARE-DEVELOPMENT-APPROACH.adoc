@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Software Development Approach — KRL
+:toc:
+
+This file is the human-readable source for `.machine_readable/policies/SOFTWARE-DEVELOPMENT-APPROACH.a2ml`.
+
+== Execution Order
+
+axis-1 > axis-2 > axis-3
+
+== Axis 1: Scope
+
+- Priority: must > intend > like
+- Inputs: README, roadmap, status-docs, ci-and-security-docs
+- Marker scan: TODO, FIXME, XXX, HACK, STUB, PARTIAL
+- Idris unsound scan: believe_me, assert_total
+- Output: scoped-work-assembly
+
+== Axis 2: Maintenance
+
+- Priority: corrective > adaptive > perfective
+- Corrective: defect/regression/safety/security fixes
+- Adaptive: scope reconciliation, stale-reference removal, obsolete-work culling
+- Perfective: quality improvements derived from axis-1 honest state
+
+== Axis 3: Audit
+
+- Priority: systems > compliance > effects
+- Systems: required systems present and operating
+- Compliance: exceptions explicit, bounded, and drift-resistant. Tooling: panic-attack
+- Effects: benchmark/operational impact evidence captured and reviewed. Tooling: ecological checking with sustainabot guidance
+
+== Cleanup Finish-Off
+
+- Root cleanup, stale work cull, docs sync human-machine, compliance audit, effects audit, release summary, next-actions
+
+== Collaboration
+
+- Maintainer dialogue required: what changed, why, remaining risks.

@@ -1,30 +1,30 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// Template: QUICKSTART-MAINTAINER.adoc — packaging, deploying, and maintaining
-// Replace rsr-template-repo, krl, {{DEPS}} with actuals
-= rsr-template-repo — Quick Start for Platform Maintainers
+= KRL — Quick Start for Platform Maintainers
 :toc:
 :toclevels: 2
 
 == Overview
 
-This guide covers packaging, deploying, and maintaining rsr-template-repo for
-distribution on your platform.
+This guide covers packaging, deploying, and maintaining KRL for distribution.
 
 == Runtime Dependencies
 
-{{DEPS}}
+- Zig 0.16.0+ (FFI build)
+- Julia 1.12+ (conformance tests, requires QuandleDB checkout)
+- Podman (container builds)
+- Just (task runner)
 
 == Build from Source
 
 [source,bash]
 ----
-git clone https://github.com/hyperpolymath/rsr-template-repo.git
-cd rsr-template-repo
+git clone https://github.com/hyperpolymath/krl.git
+cd krl
 just build-release
 ----
 
-Output: `{{BUILD_OUTPUT_PATH}}`
+Output: `src/interface/ffi/zig-out/lib/libkrl.a`
 
 == Packaging
 
@@ -46,8 +46,9 @@ nix build
 
 [source,bash]
 ----
-just stapeln-export    # Generates Containerfile
-podman build -t rsr-template-repo .
+podman build -t krl:latest -f Containerfile .
+# Or via stapeln:
+just container-build
 ----
 
 === Manual Package
@@ -64,19 +65,16 @@ Files installed:
 | Path | Contents
 
 | `$PREFIX/bin/`
-| Executables
+| Executables (if any)
 
-| `$PREFIX/share/krl/`
-| Data files, assets
+| `$PREFIX/lib/`
+| libkrl.a (FFI library)
 
 | `$PREFIX/share/doc/krl/`
 | Documentation
 
-| `$PREFIX/share/applications/`
-| .desktop file (Linux, if GUI)
-
 | `$PREFIX/share/man/man1/`
-| Man pages
+| Man pages (generated via just man)
 |===
 
 == Configuration
@@ -90,8 +88,8 @@ Fallback: `$HOME/.config/krl/config.toml`
 [source,bash]
 ----
 just doctor            # Full diagnostic
-just run --version   # Version check
-just run --selftest  # Built-in self-test
+just validate-rsr      # RSR compliance
+just verify-template   # Template instantiation
 ----
 
 == Updating
@@ -100,31 +98,28 @@ just run --selftest  # Built-in self-test
 ----
 git pull
 just build-release
-just install --prefix=/usr/local
 ----
-
-Or via OPSM: `opsm update krl`
 
 == Security Notes
 
-* License: MPL-2.0 (Palimpsest License)
-* All dependencies SHA-pinned
-* `panic-attacker` scan results: link:INSTALL-SECURITY-REPORT.adoc[]
+* License: MPL-2.0
+* All dependencies SHA-pinned where applicable
+* Container base images digest-pinned (@sha256:)
 * OpenSSF Scorecard: see badge in README
 
 == Multi-Instance Deployment
 
-For deploying multiple instances (e.g., different users or tenants):
+For deploying multiple instances:
 
 [source,bash]
 ----
-just install --prefix=/opt/krl-instance1 --config=/etc/krl/instance1.toml
-just install --prefix=/opt/krl-instance2 --config=/etc/krl/instance2.toml
+just install --prefix=/opt/krl-instance1
+just install --prefix=/opt/krl-instance2
 ----
 
 Each instance has isolated config, data, and logs.
 
 == Reporting Issues
 
-* Upstream: https://github.com/hyperpolymath/rsr-template-repo/issues
+* Upstream: https://github.com/hyperpolymath/krl/issues
 * With diagnostic: `just help-me` (pre-fills context)

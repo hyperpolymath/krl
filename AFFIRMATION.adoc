@@ -105,7 +105,7 @@ content — a 114-line `spec/grammar.ebnf`, a grammar overview, and a populated
 `src/` (`core`, `definitions`, `errors`, `bridges`, `contracts`, `aspects`,
 `interface`) — but the repo is *half-instantiated from `rsr-template-repo`*: the
 `Justfile` still carries the template's name and `# TODO` stub recipes, several
-files still hold `{{PLACEHOLDER}}` tokens, and there are no discharged proofs.
+files still hold `[PLACEHOLDER]` tokens, and there are no discharged proofs.
 The `MUST` and licence/secrets `TRUST` gates pass; `verify-template` and
 `validate-rsr` fail loudly. Exactly the honest state, fenced below.
 
@@ -127,7 +127,7 @@ The `MUST` and licence/secrets `TRUST` gates pass; `verify-template` and
 == Known-incomplete but honestly fenced (loud failures, never silent)
 
 * *`verify-template` — FAIL.* The `Justfile` still references
-  `rsr-template-repo`; ~8 files still contain `{{PLACEHOLDER}}` tokens; the
+  `rsr-template-repo`; ~8 files still contain `[PLACEHOLDER]` tokens; the
   Groove manifest still has `(port 0)`; and `EXPLAINME.adoc` still has the
   `{project-name}` token. krl is a partly-uninstantiated RSR template — visible
   debt.

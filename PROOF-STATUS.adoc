@@ -13,14 +13,14 @@ This file tracks the per-obligation status. Updated 2026-06-01.
 |===
 |Category |Total |Done |In Progress |Partial |Blocked |Not Started
 |Typing (TP) |2 |0 |0 |0 |0 |2
-|Invariant (INV) |3 |0 |0 |1 |0 |2
+|Invariant (INV) |3 |0 |0 |2 |0 |1
 |Algorithm (ALG) |1 |0 |0 |1 |0 |0
 |ABI (ABI) |1 |0 |0 |0 |0 |1 (decision pending)
 |Domain (DOM) |1 |0 |0 |0 |0 |1
-|*Total* |*8* |*0* |*0* |*2* |*0* |*6*
+|*Total* |*8* |*0* |*0* |*3* |*0* |*5*
 |===
 
-*Overall:* 0% proven, 25% partial.
+*Overall:* 0% proven, 37.5% partial (KR-3, KR-6, KR-7).
 
 The partial entries (`+KR-3+` simplification across compose() and
 `+KR-7+` generator index validity) have implementations or smoke
@@ -58,8 +58,10 @@ PROOF-STATUS, not here.
 covered. R2 across `+compose()+` not covered. R3 implementation gap. See
 `+quandledb/PROOF-NARRATIVE.md+` QD-2.
 
+|KR-6 |Fragment grammar and actual parser must agree |Conformance corpus `tests/conformance/retrieval_fragment.jl` (11 checks) + `differential_test.jl` (canonical projection determinism) |Two-parser equivalence VOID (KRLAdapter gone). Re-scoped to fragment conformance per PROOF-NARRATIVE. See `docs/v0.1.0-subset.md` for historical two-parser design.
+
 |KR-7 |`+sigma N+` accepted iff `+N ≥ 1+` |Parser error path |Not
-property-tested.
+property-tested. Lexical check in `grammar_smoke.sh` only.
 |===
 
 === Proofs blocked
@@ -90,7 +92,7 @@ quandledb QD-2)
 
 |KR-5 |ABI primitives load-bearing |ABI |Decision |P3 |2h
 
-|KR-6 |Two-parser equivalence |INV |Differential property test |P1 |4h
+|KR-6 |Fragment grammar and actual parser must agree (was two-parser equivalence) |INV |Conformance corpus `tests/conformance/retrieval_fragment.jl` + `differential_test.jl` (canonical projection design in `docs/v0.1.0-subset.md`) |P1 |2d (1d subset doc + 1d harness)
 
 |KR-7 |Generator index validity |INV |Property test |P2 |1h
 
@@ -124,4 +126,6 @@ panic-attack assail --proofs-only
 |2026-06-01 |Replaced template-content scaffold with KRL-specific
 obligations KR-1..KR-8. Deleted template-content proof files
 (Coq/Lean/Idris) that had zero KRL content. |Audit
+
+|2026-09-20 |KR-6 re-scoped: two-parser equivalence VOID (KRLAdapter gone), now fragment grammar vs actual parser agreement. Added `docs/v0.1.0-subset.md` with canonical projection design, added `tests/conformance/differential_test.jl` with determinism checks and skipped two-parser test. Updated partial count 2→3. |Agent
 |===

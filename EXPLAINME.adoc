@@ -1,31 +1,73 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= {project-name} — Show Me The Receipts
+= KRL — Show Me The Receipts
 :toc:
 :icons: font
 
-The README makes claims. This file backs them up.
+The README makes claims. This file backs them up with concrete implementation pointers.
 
-For each headline feature: what makes it work, where the code is, and an honest
-caveat. Link out to the technology's own docs rather than over-explaining.
-Reference arXiv papers only where the approach is novel. Keep it brief — prove
-the claim, don't write a textbook.
-
-== [Claim from README]
+== KRL is the resolution DSL for QuandleDB
 
 [quote, README]
 ____
-Paste the specific claim here.
+KRL (pronounced "curl") is the resolution language for QuandleDB. This repository holds its normative specification; the implementation lives in QuandleDB.
 ____
 
-Brief explanation of _how_ — 2-4 sentences. Link to the technology
-(https://elixir-lang.org[Elixir], https://ziglang.org[Zig], etc.) rather than
-explaining it from scratch.
+KRL provides four operation families: construct, transform, resolve, retrieve. The grammar is specified in `spec/grammar.ebnf` (114 lines, v0.1.0 draft). The executable fragment (retrieval/candidate) is implemented in `quandledb/server/krl/` as a Julia lexer, parser, AST and evaluator.
 
-**Caveat:** What doesn't this cover? Where are the limits?
+**Caveat:** This repository does not contain a parser or evaluator. It holds the normative spec, Idris2 ABI, Zig FFI, examples, and proof obligations. Execution requires a QuandleDB checkout.
 
-- Implementation: `path/to/code`
-- Learn more: https://relevant-docs.example.com
+- Implementation: `spec/grammar.ebnf`, `spec/SURFACES.adoc`, `quandledb/server/krl/` (external)
+- Learn more: https://github.com/hyperpolymath/quandledb
+
+== Four Operations Are Distinct Surfaces
+
+[quote, README]
+____
+KRL has four operation families. The four-verb shape is deliberate: it stops "querying" from becoming the whole identity of the language.
+____
+
+The construction/resolution draft uses `|` as tensor composition; the retrieval/candidate fragment uses `|` as stage separator. These are incompatible and must not be concatenated. `spec/SURFACES.adoc` distinguishes them explicitly.
+
+- Implementation: `spec/SURFACES.adoc`, `spec/grammar.ebnf` vs `quandledb/spec/grammar.ebnf`
+- Learn more: link:docs/decisions/0002-query-language-deferred.adoc[retrieval boundary decision]
+
+== Idris2 ABI + Zig FFI
+
+[quote, README]
+____
+Idris2 ABI declarations, Zig FFI shim over the C ABI.
+____
+
+The ABI is declared in Idris2 with 4 `%foreign` declarations (`src/interface/abi/`). The Zig FFI compiles to `libkrl.a` with 3/3 unit tests passing. Any language can call via C ABI.
+
+**Caveat:** ABI primitives are declared but not yet load-bearing — `KR-5` is pending decision.
+
+- Implementation: `src/interface/Abi/Types.idr`, `src/interface/Abi/Layout.idr`, `src/interface/Abi/Foreign.idr`, `src/interface/ffi/src/main.zig`
+- Learn more: https://idris2.readthedocs.io, https://ziglang.org
+
+== Grammar Smoke Tests
+
+[quote, README]
+____
+Four `.krl` programs, lexically checked against the grammar by `tests/smoke/grammar_smoke.sh` (20 checks)
+____
+
+Lexical-level checking ensures examples conform to `spec/grammar.ebnf` without executing them.
+
+- Implementation: `tests/smoke/grammar_smoke.sh`, `examples/*.krl`
+
+== Conformance Suite
+
+[quote, README]
+____
+Executable retrieval-fragment acceptance/rejection corpus in `tests/conformance/retrieval_fragment.jl`
+____
+
+Cross-repository corpus runs against a supplied QuandleDB checkout, testing filtered retrieval, heuristic candidate metadata, stronger-assurance refusal, and preservation of empty selections.
+
+- Implementation: `tests/conformance/retrieval_fragment.jl`
+- Run: `julia --startup-file=no tests/conformance/retrieval_fragment.jl /path/to/quandledb`
 
 == Dogfooded Across The Account
 
@@ -35,8 +77,10 @@ These aren't one-off choices — they're patterns used across hyperpolymath repo
 |===
 | Technology | Also Used In
 
-| **[Tech 1]** | https://github.com/hyperpolymath/[repo1], https://github.com/hyperpolymath/[repo2]
-| **[Tech 2]** | https://github.com/hyperpolymath/[repo3]
+| **Idris2 ABI** | https://github.com/hyperpolymath/tangle, https://github.com/hyperpolymath/quandledb, https://github.com/hyperpolymath/echo-types
+| **Zig FFI** | https://github.com/hyperpolymath/tangle, https://github.com/hyperpolymath/quandledb
+| **Groove Protocol** | https://github.com/hyperpolymath/groove, https://github.com/hyperpolymath/verisimdb, https://github.com/hyperpolymath/panic-attack
+| **RSR Template** | All hyperpolymath repos — Rhodium Standard Repository compliance
 |===
 
 == File Map
@@ -45,6 +89,17 @@ These aren't one-off choices — they're patterns used across hyperpolymath repo
 |===
 | Path | Proves
 
-| `src/` | ...
-| `ffi/` | ...
+| `spec/grammar.ebnf` | Normative grammar v0.1.0 draft (114 lines)
+| `spec/SURFACES.adoc` | Distinguishes construction/resolution draft vs retrieval fragment
+| `src/interface/Abi/` | Idris2 ABI declarations (Types, Layout, Foreign)
+| `src/interface/abi/` | Lowercase alias for RSR compliance (same content)
+| `src/interface/ffi/` | Zig FFI shim, compiles to libkrl.a
+| `src/interface/generated/abi/` | Generated C headers (gitkeep placeholder)
+| `examples/*.krl` | Example KRL programs (4 known)
+| `tests/smoke/grammar_smoke.sh` | Lexical smoke checks (20 checks)
+| `tests/conformance/retrieval_fragment.jl` | Retrieval fragment conformance corpus
+| `tests/e2e.sh` | E2E suite (FFI build, ABI correspondence, grammar smoke)
+| `.machine_readable/anchors/ANCHOR.a2ml` | Canonical semantic anchor
+| `.machine_readable/integrations/groove.a2ml` | Groove manifest, port 6462
+| `Containerfile` | Chainguard Wolfi multi-stage build, digest-pinned
 |===
