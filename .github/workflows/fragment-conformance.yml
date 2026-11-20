@@ -31,7 +31,7 @@ jobs:
       - name: Record implementation revision
         run: git -C deps/quandledb rev-parse HEAD
       - name: Install Julia
-        uses: julia-actions/setup-julia@v3.0.2
+        uses: julia-actions/setup-julia@v3.0.3
         with:
           version: '1.12.6'
       - name: Check fragment syntax, execution and explicit refusal
